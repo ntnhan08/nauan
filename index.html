@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>🍜 Nhà Hàng Phố</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080300;--panel:#120500;--k:#0e0400;
+  --amber:#FF8C00;--gold:#FFB300;--cream:#FFE0B2;
+  --jade:#00C897;--red:#F44336;--blue:#29B6F6;
+  --border:rgba(255,140,0,0.18);
+  --fh:'Baloo 2',cursive;--fb:'Nunito',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--cream);font-family:var(--fb);font-size:13px}
+.screen{display:none;height:100dvh;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+
+/* ── HOME ── */
+#home{align-items:center;justify-content:center;gap:18px;padding:16px;
+  background:radial-gradient(ellipse at 40% 60%,#3d100028,transparent 55%),var(--bg)}
+.sign{background:linear-gradient(145deg,#280d00,#160400);border:2px solid #FF8C0028;
+  border-radius:22px;padding:22px 32px;text-align:center;box-shadow:0 0 40px #ff8c001a}
+.lanterns{font-size:1.7rem;letter-spacing:9px;animation:sw 3s ease-in-out infinite;display:block}
+@keyframes sw{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.g-title{font-family:var(--fh);font-size:clamp(2.4rem,7vw,4rem);font-weight:800;
+  background:linear-gradient(135deg,#FFD700,#FF8C00,#FF4500);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;
+  filter:drop-shadow(0 0 12px #ff8c0044)}
+.g-sub{color:#FF8C0055;font-size:.78rem;letter-spacing:3px;text-transform:uppercase}
+.lv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:480px}
+.lv-card{background:#FF8C0008;border:1.5px solid var(--border);border-radius:14px;
+  padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.lv-card:hover{background:#FF8C0014;border-color:#FF8C0035;transform:translateY(-3px)}
+.lv-card:active{transform:scale(.96)}
+.lv-card.locked{opacity:.35;cursor:not-allowed}
+.lv-card.locked:hover{transform:none}
+.lv-e{font-size:2rem;display:block;margin-bottom:4px}
+.lv-nm{font-family:var(--fh);font-size:.88rem;color:#FFD700;font-weight:700;margin-bottom:2px}
+.lv-ds{font-size:.66rem;color:#FF8C0066;margin-bottom:5px}
+.lv-tg{font-size:.68rem;background:#FF8C0012;border:1px solid #FF8C002a;border-radius:16px;padding:1px 7px;display:inline-block;color:#FFB300}
+.lv-st{font-size:.8rem;margin-top:4px}
+.lock-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:#00000055;border-radius:13px}
+
+/* ── HUD ── */
+#game{background:var(--bg)}
+.hud{display:flex;align-items:center;gap:7px;padding:6px 9px;
+  background:rgba(12,4,0,.97);border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.hud-btn{background:#FF8C0012;border:1px solid var(--border);color:var(--cream);
+  border-radius:7px;padding:3px 9px;font-size:.78rem;font-weight:700;cursor:pointer;
+  font-family:var(--fb);transition:all .15s}
+.hud-btn:hover{background:#FF8C002a}
+.hud-lv{font-family:var(--fh);font-size:.88rem;color:#FFD700;font-weight:700;flex:1;min-width:0;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.hud-mo{font-family:var(--fh);font-size:.88rem;color:#FFB300;font-weight:700;white-space:nowrap}
+.hud-tm{font-family:var(--fh);font-size:.88rem;font-weight:700;white-space:nowrap}
+.hud-tm.warn{color:#FF4500;animation:bl .55s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.35}}
+.hud-rp{font-size:.8rem;white-space:nowrap}
+
+/* ── LAYOUT ── */
+.gbody{display:flex;flex:1;overflow:hidden;min-height:0}
+
+/* ── KITCHEN ── */
+.kitchen{width:clamp(120px,30%,175px);background:var(--k);border-right:1px solid #FF8C0012;
+  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.zh{font-family:var(--fh);font-size:.7rem;font-weight:700;padding:5px 7px;
+  background:#FF8C000d;border-bottom:1px solid var(--border);color:#FF8C00;letter-spacing:.5px}
+.rec-list{padding:5px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;flex:1}
+.rec{background:#FF8C0008;border:1px solid var(--border);border-radius:9px;
+  padding:6px 7px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
+.rec:hover{background:#FF8C0018;border-color:#FF8C003a}
+.rec:active{transform:scale(.94)}
+.rec.disabled{opacity:.35;cursor:not-allowed}
+.re{font-size:1.3rem;flex-shrink:0}
+.rn{font-size:.7rem;font-weight:700;color:var(--cream)}
+.rm{font-size:.6rem;color:#FF8C0077;display:flex;gap:4px;margin-top:1px}
+.rp{font-size:.58rem;background:#FFB30018;color:#FFB300;border:1px solid #FFB30032;border-radius:7px;padding:0 4px}
+
+/* Cook progress slots */
+.cslots{padding:5px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+.cs{background:#FF8C0007;border:1px dashed #FF8C0020;border-radius:9px;
+  padding:6px;min-height:48px;display:flex;align-items:center;gap:6px}
+.cs.prep{border-color:#FFB30066;background:#FFB30010;border-style:solid}
+.cs.cook{border-color:#FF8C0055;background:#FF8C0010;border-style:solid}
+.cs.done{border-color:#00C897;background:#00C89712;cursor:pointer;border-style:solid;
+  animation:rg 1.2s infinite}
+@keyframes rg{0%,100%{box-shadow:0 0 0 0 #00C89722}50%{box-shadow:0 0 0 5px #00C89700}}
+.cs.done:active{transform:scale(.94)}
+.cs-e{font-size:1.3rem;flex-shrink:0}
+.cs-info{flex:1;min-width:0}
+.cs-nm{font-size:.68rem;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-st{font-size:.6rem;color:#FF8C0066}
+.cs-bar-w{height:3px;background:#ffffff0e;border-radius:2px;margin-top:3px;overflow:hidden}
+.cs-bar{height:100%;background:linear-gradient(90deg,#FF8C00,#FFD700);border-radius:2px}
+.cs-ok{font-size:.6rem;font-weight:700;color:#00C897}
+.cs-empty{font-size:.64rem;color:#FF8C0020;width:100%;text-align:center}
+
+/* ── FLOOR ── */
+.floor{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:#0b0400}
+.tbl-grid{flex:1;display:grid;padding:7px;gap:7px;overflow-y:auto;align-content:start}
+.tb{background:#FF8C0005;border:2px solid var(--border);border-radius:12px;
+  padding:7px;cursor:pointer;transition:border-color .15s,background .15s;
+  position:relative;min-height:78px;display:flex;flex-direction:column;gap:3px}
+.tb:hover{border-color:#FF8C002a}
+.tb:active{transform:scale(.96)}
+.tb.occupied{border-color:#FF8C0038;background:#FF8C0008}
+.tb.eating{border-color:#4CAF5035;background:#4CAF5006}
+.tb.paying{border-color:#FFD700;background:#FFD70009;animation:pg 1s infinite}
+@keyframes pg{0%,100%{box-shadow:0 0 0 0 #FFD70022}50%{box-shadow:0 0 0 6px #FFD70000}}
+.tb.dirty{border-color:#8D6E6330}
+.tb.dirty:hover{border-color:#FF8C0042;background:#FF8C000c}
+.tb.washing{border-color:#29B6F630;background:#29B6F608}
+.tb.serve-ok{border-color:#00E676!important;background:#00E67610!important;animation:sg .7s infinite!important}
+@keyframes sg{0%,100%{box-shadow:0 0 0 0 #00E67633}50%{box-shadow:0 0 0 8px #00E67600}}
+.tb.shake{animation:shk .4s!important}
+@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.tb-num{font-size:.58rem;color:#FF8C0033;font-weight:700}
+.tc{display:flex;align-items:center;gap:5px}
+.tav{font-size:1.3rem;flex-shrink:0}
+.tinf{flex:1;min-width:0}
+.tnm{font-size:.66rem;font-weight:700;color:var(--cream);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tor{font-size:.62rem;color:#FF8C00;display:flex;align-items:center;gap:2px}
+.pw{height:3px;background:#ffffff0c;border-radius:2px;overflow:hidden;margin-top:2px}
+.pb{height:100%;border-radius:2px;transition:width .4s,background .4s}
+.pb.hi{background:linear-gradient(90deg,#00E676,#69F0AE)}
+.pb.md{background:linear-gradient(90deg,#FFB300,#FFD740)}
+.pb.lo{background:linear-gradient(90deg,#FF1744,#FF6D00)}
+.t-empty{text-align:center;margin-top:4px;font-size:1rem;color:#FF8C0010}
+.pay-ov{position:absolute;inset:0;background:#000000aa;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;z-index:5}
+.pay-amt{font-family:var(--fh);font-size:.88rem;color:#FFD700;font-weight:800}
+.pay-tip{font-size:.62rem;color:#00E676;font-weight:700}
+.dp{font-size:.88rem;text-align:center;padding:3px 0;line-height:1.4}
+.th{text-align:center;font-size:.6rem;font-weight:700;margin-top:2px}
+
+/* ── QUEUE ── */
+.qarea{padding:5px 7px;background:#00000033;border-top:1px solid var(--border);flex-shrink:0}
+.qhd{font-size:.62rem;color:#FF8C0055;font-weight:700;margin-bottom:3px}
+.qlist{display:flex;gap:4px;flex-wrap:wrap}
+.qp{background:#FF8C000a;border:1px solid var(--border);border-radius:7px;
+  padding:2px 6px;font-size:.65rem;display:flex;align-items:center;gap:2px;
+  animation:pi .22s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pi{from{transform:scale(0)}to{transform:scale(1)}}
+
+/* ── BOTTOM ── */
+.bbar{display:flex;border-top:1px solid #001510;flex-shrink:0;min-height:54px}
+
+/* SINK */
+.sink{flex:1;background:#001410;padding:6px 8px;display:flex;align-items:center;gap:7px;overflow:hidden;min-width:0}
+.sink-hd{font-family:var(--fh);font-size:.65rem;color:#26C6DA;white-space:nowrap;font-weight:700}
+.sink-pile{display:flex;flex-wrap:wrap;gap:2px;flex:1;align-items:center;min-width:0;max-height:40px;overflow:hidden}
+.dc{font-size:.95rem;position:relative;cursor:default}
+.dc.washing-it{animation:spinW .8s linear infinite}
+@keyframes spinW{to{transform:rotate(360deg)}}
+.wash-ctrl{display:flex;flex-direction:column;align-items:center;gap:1px;flex-shrink:0}
+.wb{background:linear-gradient(135deg,#005c60,#00ACC1);border:none;border-radius:8px;
+  padding:5px 10px;color:#fff;font-family:var(--fb);font-weight:700;font-size:.7rem;
+  cursor:pointer;transition:all .15s;white-space:nowrap}
+.wb:hover{filter:brightness(1.15)}
+.wb:active{transform:scale(.92)}
+.wb:disabled{opacity:.3;cursor:not-allowed}
+.wbar-w{width:52px}
+.wbar{height:4px;background:#ffffff0e;border-radius:2px;overflow:hidden;margin-top:1px}
+.wbar-f{height:100%;background:linear-gradient(90deg,#00BCD4,#80DEEA);border-radius:2px;transition:width .08s}
+.wcnt{font-size:.58rem;color:#26C6DA55;text-align:center}
+
+/* TRAY */
+.tray{width:clamp(80px,22%,130px);background:#001a0a;border-left:1px solid #00C89718;
+  padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0}
+.tray-hd{font-size:.58rem;color:#00C89755;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.tray-empty{font-size:.64rem;color:#ffffff15;text-align:center}
+.tray-dishes{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;max-height:36px;overflow:hidden}
+.tray-cnt{font-size:.62rem;color:#00C897;font-weight:700}
+.tray-btn{font-size:.6rem;background:#00C89718;border:1px solid #00C89730;color:#00C897;
+  border-radius:6px;padding:2px 6px;cursor:pointer;font-family:var(--fb);margin-top:2px}
+.tray-btn:active{transform:scale(.92)}
+
+/* HAND */
+.hand{width:clamp(76px,20%,120px);background:#00200a;border-left:1px solid #00C85315;
+  padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0}
+.hand-hd{font-size:.58rem;color:#00C85355;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.hand-empty{font-size:.62rem;color:#ffffff15;text-align:center}
+.hand-dish{text-align:center}
+.hand-e{font-size:1.7rem;display:block;animation:fy 1.5s ease-in-out infinite}
+@keyframes fy{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.hand-n{font-size:.62rem;color:#00E676;font-weight:700;margin-top:1px}
+.drop-btn{font-size:.58rem;background:#FF17441a;border:1px solid #FF174430;color:#FF1744;
+  border-radius:5px;padding:2px 5px;cursor:pointer;font-family:var(--fb);margin-top:2px}
+
+/* ── INGREDIENT MODAL ── */
+.modal-bg{position:fixed;inset:0;background:#000000cc;z-index:200;
+  display:flex;align-items:flex-end;justify-content:center;
+  animation:mfade .2s ease-out}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.modal{background:linear-gradient(160deg,#1c0800,#110400);border:1.5px solid #FF8C0033;
+  border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:16px;
+  animation:mslide .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes mslide{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-hd{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.modal-e{font-size:2rem}
+.modal-title{font-family:var(--fh);font-size:1.1rem;color:#FFD700;font-weight:700;flex:1}
+.modal-close{background:#FF8C0015;border:1px solid #FF8C0030;color:var(--cream);
+  border-radius:8px;padding:4px 10px;font-size:.8rem;cursor:pointer;font-family:var(--fb);font-weight:700}
+.modal-progress{margin-bottom:10px}
+.mp-label{font-size:.68rem;color:#FF8C0077;margin-bottom:4px;display:flex;justify-content:space-between}
+.mp-bar-w{height:7px;background:#ffffff0e;border-radius:4px;overflow:hidden}
+.mp-bar{height:100%;background:linear-gradient(90deg,#FF8C00,#FFD700);border-radius:4px;transition:width .3s}
+.ing-title{font-size:.7rem;color:#FF8C0077;font-weight:700;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
+.ing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:7px;margin-bottom:12px}
+.ing-btn{background:#FF8C0008;border:2px solid var(--border);border-radius:10px;
+  padding:8px 5px;text-align:center;cursor:pointer;transition:all .2s}
+.ing-btn:hover:not(.used):not(.wrong-ing):not(.correct-ing){background:#FF8C0018;border-color:#FF8C0035;transform:scale(1.05)}
+.ing-btn:active:not(.used){transform:scale(.92)}
+.ing-btn.correct-ing{background:#00C89722;border-color:#00C897;animation:cpop .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes cpop{0%{transform:scale(.8)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.ing-btn.wrong-ing{background:#F4433618;border-color:#F44336;animation:wshk .35s}
+@keyframes wshk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.ing-btn.used{opacity:.28;cursor:not-allowed}
+.ing-e{font-size:1.5rem;display:block;margin-bottom:3px}
+.ing-n{font-size:.6rem;color:var(--cream);font-weight:600;line-height:1.2}
+.ing-btn.need-now{border-color:#FFD700;background:#FFD70012;animation:needPulse 1s infinite}
+@keyframes needPulse{0%,100%{box-shadow:0 0 0 0 #FFD70033}50%{box-shadow:0 0 0 5px #FFD70000}}
+.modal-hint{font-size:.72rem;color:#FF8C0077;text-align:center;padding:6px;background:#FF8C0008;border-radius:8px}
+
+/* ── RESULT ── */
+#result{align-items:center;justify-content:center;padding:16px;
+  background:radial-gradient(ellipse at 50% 30%,#ff8c0015,transparent 55%),var(--bg)}
+.res-card{background:linear-gradient(145deg,rgba(32,12,0,.97),rgba(16,5,0,.97));
+  border:1.5px solid #FF8C0028;border-radius:24px;padding:clamp(16px,4vw,32px);
+  text-align:center;max-width:380px;width:100%;
+  box-shadow:0 0 40px #ff8c0015;animation:ri .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes ri{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.res-e{font-size:clamp(2.8rem,9vw,5rem);display:block;margin-bottom:6px;
+  animation:bi .6s .2s both cubic-bezier(.34,1.56,.64,1)}
+@keyframes bi{from{transform:scale(0)}60%{transform:scale(1.2)}to{transform:scale(1)}}
+.res-t{font-family:var(--fh);font-size:clamp(1.4rem,4vw,1.9rem);color:#FFD700;font-weight:800}
+.res-s{font-size:1.5rem;margin:5px 0;letter-spacing:4px}
+.res-m{font-family:var(--fh);font-size:2rem;color:#FFB300;font-weight:800}
+.res-tg{font-size:.75rem;color:#FF8C0055;margin-bottom:10px}
+.res-st{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
+.rs{background:#FF8C0008;border:1px solid var(--border);border-radius:10px;padding:7px}
+.rsv{font-family:var(--fh);font-size:1.1rem;color:#FFB300;font-weight:700}
+.rsl{font-size:.62rem;color:#FF8C0044}
+.res-btns{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.btn-nx{background:linear-gradient(135deg,#E53935,#FF8C00);border:none;border-radius:26px;
+  padding:10px 22px;color:#fff;font-family:var(--fb);font-weight:800;font-size:.9rem;
+  cursor:pointer;transition:all .2s;box-shadow:0 3px 10px #ff8c0033}
+.btn-nx:hover{transform:scale(1.05)}
+.btn-hm{background:#FF8C0010;border:1px solid var(--border);color:var(--cream);
+  border-radius:26px;padding:10px 22px;font-family:var(--fb);font-weight:700;font-size:.9rem;
+  cursor:pointer;transition:all .2s}
+.btn-hm:hover{background:#FF8C0020}
+
+/* ── FX ── */
+.ftxt{position:fixed;pointer-events:none;z-index:9999;font-family:var(--fh);
+  font-weight:800;font-size:1.1rem;animation:fu 1.1s ease-out forwards;white-space:nowrap}
+@keyframes fu{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-58px);opacity:0}}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) scale(0);
+  background:linear-gradient(135deg,#220c00,#140400);border:1px solid #FF8C0035;
+  border-radius:26px;padding:7px 18px;z-index:9998;font-family:var(--fh);
+  color:var(--cream);font-size:.92rem;font-weight:700;
+  box-shadow:0 3px 12px #00000055;pointer-events:none;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:92vw;text-align:center}
+.toast.show{transform:translateX(-50%) scale(1)}
+.tipbub{position:fixed;bottom:120px;left:50%;transform:translateX(-50%);
+  background:#FF8C000c;border:1px solid var(--border);backdrop-filter:blur(6px);
+  border-radius:12px;padding:6px 14px;color:var(--cream);font-size:.78rem;font-weight:700;
+  z-index:100;max-width:90vw;text-align:center;pointer-events:none;
+  animation:tipIn .3s ease-out}
+@keyframes tipIn{from{transform:translate(-50%,10px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+.cf{position:fixed;pointer-events:none;z-index:9997;animation:cfall linear forwards}
+@keyframes cfall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#FF8C0020;border-radius:2px}
+@media(max-width:380px){.kitchen{width:110px}.hand{width:70px}.tray{width:70px}}
+@media(min-width:650px){.tbl-grid{grid-template-columns:repeat(3,1fr)!important}}
+@media(min-width:900px){.tbl-grid{grid-template-columns:repeat(4,1fr)!important}}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="screen active" id="home">
+  <div class="sign">
+    <span class="lanterns">🏮 🏮 🏮</span>
+    <div class="g-title">Nhà Hàng Phố</div>
+    <div class="g-sub">Restaurant Simulator</div>
+  </div>
+  <div class="lv-grid" id="lvGrid"></div>
+  <div style="color:#FF8C0025;font-size:.66rem;text-align:center">
+    🥬 Chọn nguyên liệu · 🍳 Nấu · 🫱 Phục vụ · 💧 Rửa từng cái
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="game">
+  <div class="hud">
+    <button class="hud-btn" onclick="confirmQuit()">✕</button>
+    <span class="hud-lv" id="hudLv">Màn 1</span>
+    <span class="hud-mo" id="hudMo">💰 0đ</span>
+    <span class="hud-tm" id="hudTm">⏱ 3:00</span>
+    <span class="hud-rp" id="hudRp">⭐⭐⭐⭐⭐</span>
+  </div>
+  <div class="gbody">
+    <!-- KITCHEN -->
+    <div class="kitchen">
+      <div class="zh">🥬 Thực đơn</div>
+      <div class="rec-list" id="recList"></div>
+      <div class="zh">🍳 Đang nấu</div>
+      <div class="cslots" id="cslots"></div>
+    </div>
+    <!-- FLOOR -->
+    <div class="floor">
+      <div class="tbl-grid" id="tblGrid"></div>
+      <div class="qarea">
+        <div class="qhd">🚶 Hàng chờ: <span id="qcnt" style="color:#FFB300">0</span> khách</div>
+        <div class="qlist" id="qlist"></div>
+      </div>
+    </div>
+  </div>
+  <!-- BOTTOM -->
+  <div class="bbar">
+    <div class="sink">
+      <div class="sink-hd">💧 Bồn</div>
+      <div class="sink-pile" id="sinkPile"></div>
+      <div class="wash-ctrl">
+        <button class="wb" id="wbtn" onclick="toggleWash()">Rửa!</button>
+        <div class="wbar-w">
+          <div class="wbar"><div class="wbar-f" id="wfill" style="width:0%"></div></div>
+          <div class="wcnt" id="wcnt">0 cái</div>
+        </div>
+      </div>
+    </div>
+    <!-- TRAY: collected dirty dishes -->
+    <div class="tray" id="trayZone">
+      <div class="tray-hd">🧺 Khay</div>
+      <div class="tray-empty" id="trayEmpty">Trống</div>
+      <div id="trayDishes" style="display:none;flex-direction:column;align-items:center;gap:2px">
+        <div class="tray-dishes" id="trayPile"></div>
+        <div class="tray-cnt" id="trayCnt"></div>
+        <button class="tray-btn" onclick="sendTrayToSink()">→ Bồn</button>
+      </div>
+    </div>
+    <!-- HAND: carrying cooked dish -->
+    <div class="hand">
+      <div class="hand-hd">🖐 Tay</div>
+      <div class="hand-empty" id="handEmpty">Trống</div>
+      <div class="hand-dish" id="handDish" style="display:none">
+        <span class="hand-e" id="handE"></span>
+        <div class="hand-n" id="handN"></div>
+        <button class="drop-btn" onclick="dropDish()">✕</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="result">
+  <div class="res-card">
+    <span class="res-e" id="resE">🏆</span>
+    <div class="res-t" id="resT"></div>
+    <div class="res-s" id="resS"></div>
+    <div class="res-m" id="resM"></div>
+    <div class="res-tg" id="resTg"></div>
+    <div class="res-st" id="resSt"></div>
+    <div class="res-btns">
+      <button class="btn-nx" id="btnNx" onclick="nextLevel()">Màn tiếp →</button>
+      <button class="btn-hm" onclick="goHome()">🏠 Về nhà</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const INGS = {
+  ca_phe_hat: {e:'☕',n:'Cà phê hạt'},
+  nuoc_nong:  {e:'♨️',n:'Nước nóng'},
+  duong:      {e:'🍬',n:'Đường'},
+  sua_tuoi:   {e:'🥛',n:'Sữa tươi'},
+  banh_mi_o:  {e:'🥖',n:'Bánh mì'},
+  pate:       {e:'🧈',n:'Pa-tê'},
+  thit_nguoi: {e:'🥩',n:'Thịt nguội'},
+  rau_bm:     {e:'🥬',n:'Rau sống'},
+  ot:         {e:'🌶️',n:'Ớt'},
+  xuong_bo:   {e:'🦴',n:'Xương bò'},
+  banh_pho:   {e:'🍝',n:'Bánh phở'},
+  rau_thom:   {e:'🌿',n:'Rau thơm'},
+  hanh_tay:   {e:'🧅',n:'Hành tây'},
+  gung:       {e:'🫚',n:'Gừng'},
+  com_trang:  {e:'🍚',n:'Cơm trắng'},
+  suon_nuong: {e:'🥓',n:'Sườn nướng'},
+  trung_op:   {e:'🍳',n:'Trứng ốp la'},
+  mo_hanh:    {e:'🧄',n:'Mỡ hành'},
+  bun_tuoi:   {e:'🍜',n:'Bún tươi'},
+  sa:         {e:'🌾',n:'Sả'},
+  mam_ruoc:   {e:'🫙',n:'Mắm ruốc'},
+  thit_bo:    {e:'🥩',n:'Thịt bò'},
+  bot_gao:    {e:'🌾',n:'Bột gạo'},
+  nuoc_cot_dua:{e:'🥥',n:'Nước cốt dừa'},
+  tom:        {e:'🦐',n:'Tôm'},
+  gia_do:     {e:'🌱',n:'Giá đỗ'},
+  nghé:       {e:'🟡',n:'Nghệ'},
+  nuoc_lau:   {e:'🫕',n:'Nước lẩu'},
+  nam_huong:  {e:'🍄',n:'Nấm hương'},
+  rau_lau:    {e:'🥦',n:'Rau lẩu'},
+  thit_thi:   {e:'🥓',n:'Thịt thăn'},
+  banh_trang: {e:'⬜',n:'Bánh tráng'},
+  bun_goi:    {e:'🍝',n:'Bún sợi'},
+  rau_goi:    {e:'🥗',n:'Rau sống'},
+  // wrongs
+  ca:         {e:'🐟',n:'Cá (sai)',  wrong:1},
+  ketchup:    {e:'🍅',n:'Tương cà',  wrong:1},
+  giam:       {e:'🧴',n:'Giấm',      wrong:1},
+  muoi:       {e:'🧂',n:'Muối',      wrong:1},
+};
+
+const RECIPES = [
+  { id:'ca_phe',  name:'Cà Phê',    e:'☕', cookTime:2, price:15,
+    steps:[
+      {label:'Xay & pha cà phê', ings:['ca_phe_hat','nuoc_nong'], wrongs:['muoi','giam']},
+      {label:'Thêm đường & sữa',  ings:['duong','sua_tuoi'],       wrongs:['ketchup']},
+    ]},
+  { id:'banh_mi', name:'Bánh Mì',   e:'🥖', cookTime:3, price:25,
+    steps:[
+      {label:'Chuẩn bị bánh & pa-tê', ings:['banh_mi_o','pate'],       wrongs:['giam','muoi']},
+      {label:'Thêm nhân & rau',        ings:['thit_nguoi','rau_bm','ot'],wrongs:['ketchup']},
+    ]},
+  { id:'pho',     name:'Phở Bò',    e:'🍜', cookTime:6, price:40,
+    steps:[
+      {label:'Nấu nước dùng',    ings:['xuong_bo','gung','hanh_tay'],  wrongs:['giam','ca']},
+      {label:'Trần bánh & thịt', ings:['banh_pho','thit_bo'],           wrongs:['muoi']},
+      {label:'Trang trí rau',    ings:['rau_thom','ot'],                wrongs:['ketchup']},
+    ]},
+  { id:'com_tam', name:'Cơm Tấm',   e:'🍚', cookTime:5, price:35,
+    steps:[
+      {label:'Nấu cơm & sườn',  ings:['com_trang','suon_nuong'], wrongs:['giam']},
+      {label:'Thêm trứng & hành',ings:['trung_op','mo_hanh'],     wrongs:['muoi','ca']},
+    ]},
+  { id:'bun_bo',  name:'Bún Bò',    e:'🥣', cookTime:7, price:45,
+    steps:[
+      {label:'Nấu nước bún',  ings:['nuoc_lau','sa','mam_ruoc'],wrongs:['ketchup','giam']},
+      {label:'Thêm thịt & bún',ings:['thit_bo','bun_tuoi'],       wrongs:['ca']},
+      {label:'Rau & ớt',       ings:['rau_thom','ot'],             wrongs:['muoi']},
+    ]},
+  { id:'banh_xeo',name:'Bánh Xèo',  e:'🥞', cookTime:8, price:55,
+    steps:[
+      {label:'Pha bột bánh',   ings:['bot_gao','nuoc_cot_dua','nghé'],wrongs:['muoi','giam']},
+      {label:'Xào nhân',       ings:['tom','thit_nguoi'],              wrongs:['ca']},
+      {label:'Đổ bánh & giá',  ings:['gia_do','rau_bm'],               wrongs:['ketchup']},
+    ]},
+  { id:'lau',     name:'Lẩu',       e:'🫕', cookTime:12, price:90,
+    steps:[
+      {label:'Nấu nước lẩu',    ings:['nuoc_lau','sa','gung'],        wrongs:['giam']},
+      {label:'Thêm thịt & nấm', ings:['thit_bo','thit_thi','nam_huong'],wrongs:['muoi']},
+      {label:'Rau lẩu & ớt',    ings:['rau_lau','ot'],                 wrongs:['ketchup','ca']},
+    ]},
+  { id:'goi_cuon',name:'Gỏi Cuốn',  e:'🫔', cookTime:4, price:30,
+    steps:[
+      {label:'Chuẩn bị bánh tráng', ings:['banh_trang','bun_goi'],wrongs:['ca']},
+      {label:'Cuốn nhân tôm & rau', ings:['tom','rau_goi','rau_thom'],wrongs:['muoi','giam']},
+    ]},
+];
+
+const LEVELS = [
+  {id:1, name:'Quán Vỉa Hè',   e:'🏠', desc:'3 bàn · Bắt đầu nhẹ',
+   tables:3, slots:2, time:150, target:250,  spawn:9,  pat:5.5, recs:[0,1,2]},
+  {id:2, name:'Quán Bình Dân', e:'🍜', desc:'5 bàn · Đông khách hơn',
+   tables:5, slots:3, time:180, target:650,  spawn:6.5,pat:8,   recs:[0,1,2,3,4]},
+  {id:3, name:'Nhà Hàng',      e:'🏪', desc:'7 bàn · Nhịp nhanh',
+   tables:7, slots:3, time:210, target:1400, spawn:4.5,pat:10,  recs:[0,1,2,3,4,5,6]},
+  {id:4, name:'Nhà Hàng 5⭐',  e:'✨', desc:'8 bàn VIP · Pro',
+   tables:8, slots:4, time:200, target:2500, spawn:3,  pat:13,  recs:[0,1,2,3,4,5,6,7]},
+];
+
+const CUSTS = [
+  {n:'Anh Tuấn', av:'👨', tip:1.0, eat:6},
+  {n:'Chị Lan',  av:'👩', tip:1.2, eat:5},
+  {n:'Bà Hoa',   av:'👵', tip:0.8, eat:8},
+  {n:'Ông Nam',  av:'👴', tip:0.9, eat:9},
+  {n:'Bạn Minh', av:'🧑', tip:1.1, eat:5},
+  {n:'Cô Hà',    av:'🧕', tip:1.3, eat:6},
+  {n:'Khoa VIP', av:'👱', tip:1.7, eat:4, vip:1},
+  {n:'Nhóm Bạn', av:'👨‍👩‍👧',tip:1.9,eat:8, vip:1},
+  {n:'Du Khách', av:'🧳', tip:2.1, eat:5, vip:1},
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let G = null, LV = null, gameTimer = null;
+let scores = JSON.parse(localStorage.getItem('nhph3')||'{}');
+// cooking modal state
+let cookingModal = null; // {slotId, recipe, stepIdx, stepDone, addedIngs}
+
+// ══════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════
+function renderHome() {
+  document.getElementById('lvGrid').innerHTML = LEVELS.map(lv => {
+    const sc = scores[lv.id]||0;
+    const prev = lv.id>1 ? LEVELS[lv.id-2] : null;
+    const locked = prev && !(scores[prev.id] >= prev.target);
+    const stars = sc>=lv.target*1.4?'⭐⭐⭐':sc>=lv.target?'⭐⭐':sc>0?'⭐':'☆☆☆';
+    return `<div class="lv-card${locked?' locked':''}" onclick="${locked?'tip2(\'🔒 Hoàn thành màn trước!\')':'startGame('+lv.id+')'}">
+      <span class="lv-e">${lv.e}</span>
+      <div class="lv-nm">Màn ${lv.id}: ${lv.name}</div>
+      <div class="lv-ds">${lv.desc}</div>
+      <div class="lv-tg">🎯 ${lv.target.toLocaleString()}đ</div>
+      <div class="lv-st">${stars}</div>
+      ${locked?'<div class="lock-ov">🔒</div>':''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// START
+// ══════════════════════════════════════════
+function startGame(lId) {
+  LV = LEVELS.find(l=>l.id===lId);
+  if(!LV) return;
+  G = {
+    money:0, time:LV.time, rep:5,
+    tables: Array.from({length:LV.tables},(_,i)=>({id:i,state:'empty',cust:null,dirty:[]})),
+    slots:  Array.from({length:LV.slots}, (_,i)=>({id:i,rec:null,prog:0,done:false,busy:false,prepping:false})),
+    sink: {pile:[],prog:0,on:false},
+    tray: [],           // collected dirty dishes
+    queue: [],
+    hand: null,
+    stats:{served:0,tip:0,angry:0,washed:0},
+    spawnT:2, running:true, lastT:Date.now(),
+  };
+  cookingModal = null;
+  document.getElementById('hudLv').textContent = `Màn ${LV.id}: ${LV.name}`;
+  buildRecipeList();
+  renderAll();
+  showScreen('game');
+  tip2('🥬 Nhấn vào thực đơn → chọn nguyên liệu → nấu → phục vụ bàn!');
+  if(gameTimer) clearInterval(gameTimer);
+  gameTimer = setInterval(tick, 100);
+}
+
+// ══════════════════════════════════════════
+// TICK
+// ══════════════════════════════════════════
+function tick() {
+  if(!G||!G.running) return;
+  const now = Date.now();
+  const dt = Math.min((now-G.lastT)/1000, 0.3);
+  G.lastT = now;
+
+  G.time -= dt;
+  if(G.time<=0){ G.time=0; endGame(); return; }
+
+  // patience & eating
+  G.tables.forEach(t=>{
+    if(t.state==='occupied'&&t.cust){
+      t.cust.pat -= dt*LV.pat*(t.cust.vip?1.5:1);
+      if(t.cust.pat<=0) angryLeave(t);
+    }
+    if(t.state==='eating'&&t.cust){
+      t.cust.eatT -= dt;
+      if(t.cust.eatT<=0){ t.state='paying'; playS('ding'); renderTable(t.id); }
+    }
+  });
+
+  // lightweight patience bar update (no full DOM rebuild)
+  G.tables.forEach(t=>{
+    if(t.state!=='occupied'||!t.cust) return;
+    const el = document.getElementById('tb'+t.id);
+    if(!el) return;
+    const bar = el.querySelector('.pb');
+    if(bar){ const p=t.cust.pat; bar.style.width=p.toFixed(1)+'%'; bar.className='pb '+(p>65?'hi':p>30?'md':'lo'); }
+  });
+
+  // spawn
+  G.spawnT -= dt;
+  if(G.spawnT<=0 && G.queue.length<5){ spawnCust(); G.spawnT=LV.spawn*(0.7+Math.random()*0.6); }
+  seatQueue();
+
+  // cook slots: only timer-based cooking (after all ingredients added)
+  G.slots.forEach(s=>{
+    if(s.busy&&!s.done){
+      s.prog += dt/s.rec.cookTime*100;
+      if(s.prog>=100){ s.prog=100; s.done=true; s.busy=false; playS('ding'); haptic(55); renderSlot(s.id); }
+      else { const el=document.getElementById('cs'+s.id); if(el){ const b=el.querySelector('.cs-bar'); if(b) b.style.width=s.prog.toFixed(1)+'%'; } }
+    }
+  });
+
+  // washing (one-by-one)
+  if(G.sink.on && G.sink.pile.length>0){
+    G.sink.prog += dt*25; // ~4s per dish
+    document.getElementById('wfill').style.width = G.sink.prog+'%';
+    if(G.sink.prog>=100) washOneDish();
+  }
+
+  updateHUD();
+}
+
+// ══════════════════════════════════════════
+// CUSTOMERS
+// ══════════════════════════════════════════
+function spawnCust(){
+  const pool = LV.id<3 ? CUSTS.filter(c=>!c.vip) : CUSTS;
+  const t = pool[Math.floor(Math.random()*pool.length)];
+  const rec = LV.recs.map(i=>RECIPES[i]);
+  const order = rec[Math.floor(Math.random()*rec.length)];
+  G.queue.push({n:t.n,av:t.av,vip:t.vip||0,tip:t.tip,eat:t.eat,order,pat:100,eatT:t.eat});
+  renderQueue();
+}
+function seatQueue(){
+  let ch=false;
+  G.tables.forEach(t=>{ if(t.state==='empty'&&G.queue.length>0){ t.cust=G.queue.shift(); t.state='occupied'; ch=true; renderTable(t.id); } });
+  if(ch) renderQueue();
+}
+function angryLeave(t){
+  G.rep=Math.max(0,G.rep-0.5); G.stats.angry++;
+  t.cust=null; t.state='empty';
+  floatAt('-⭐😡',t.id,'#FF1744');
+  playS('wrong'); haptic([75,35,75]);
+  renderTable(t.id);
+}
+
+// ══════════════════════════════════════════
+// COOKING MODAL (ingredient steps)
+// ══════════════════════════════════════════
+function openCookModal(recId) {
+  const freeSlot = G.slots.find(s=>!s.busy&&!s.done&&!s.prepping);
+  if(!freeSlot){ tip2('🔴 Hết bếp trống!'); return; }
+  const rec = RECIPES.find(r=>r.id===recId);
+  if(!rec) return;
+
+  freeSlot.prepping = true;
+  freeSlot.rec = rec;
+
+  cookingModal = {
+    slotId: freeSlot.id,
+    recipe: rec,
+    stepIdx: 0,
+    addedIngs: [],   // ids added in current step
+  };
+  renderModal();
+}
+
+function renderModal(){
+  if(!cookingModal) return;
+  const {recipe, stepIdx, addedIngs} = cookingModal;
+  const step = recipe.steps[stepIdx];
+  const totalSteps = recipe.steps.length;
+  const pct = Math.round(stepIdx/totalSteps*100);
+
+  // Build ingredient pool: needed + wrongs, shuffle
+  const pool = [];
+  step.ings.forEach(id=>pool.push({id, ...INGS[id], needed:true}));
+  step.wrongs.forEach(id=>pool.push({id, ...INGS[id], wrong:true}));
+  const shuffled = pool.sort(()=>Math.random()-.5);
+
+  // First needed ingredient that hasn't been added yet
+  const nextNeeded = step.ings.find(id=>!addedIngs.includes(id));
+
+  const html = `
+  <div class="modal-bg" onclick="closeModalBg(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-hd">
+      <span class="modal-e">${recipe.e}</span>
+      <div class="modal-title">${recipe.name}</div>
+      <button class="modal-close" onclick="cancelCook()">✕ Huỷ</button>
+    </div>
+    <div class="modal-progress">
+      <div class="mp-label"><span>Bước ${stepIdx+1}/${totalSteps}: ${step.label}</span><span>${pct}%</span></div>
+      <div class="mp-bar-w"><div class="mp-bar" style="width:${pct+Math.round(100/totalSteps*(addedIngs.length/step.ings.length))}%"></div></div>
+    </div>
+    <div class="ing-title">🥬 Chọn nguyên liệu cần thiết</div>
+    <div class="ing-grid">
+      ${shuffled.map(ing=>{
+        const used = addedIngs.includes(ing.id);
+        const isNext = ing.id === nextNeeded;
+        return `<div class="ing-btn${used?' used':''}${isNext?' need-now':''}" id="ing_${ing.id}" onclick="addIng('${ing.id}')">
+          <span class="ing-e">${ing.e}</span>
+          <span class="ing-n">${ing.n}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="modal-hint">💡 ${nextNeeded ? `Tiếp theo: ${INGS[nextNeeded].e} ${INGS[nextNeeded].n}` : 'Đủ nguyên liệu bước này!'}</div>
+  </div></div>`;
+
+  let existing = document.getElementById('modal-wrap');
+  if(!existing){ existing = document.createElement('div'); existing.id='modal-wrap'; document.body.appendChild(existing); }
+  existing.innerHTML = html;
+}
+
+function addIng(id) {
+  if(!cookingModal) return;
+  const {recipe, stepIdx, addedIngs} = cookingModal;
+  const step = recipe.steps[stepIdx];
+
+  if(addedIngs.includes(id)) return;
+
+  const isCorrect = step.ings.includes(id);
+  const isWrong = step.wrongs.includes(id);
+
+  const btn = document.getElementById('ing_'+id);
+
+  if(isCorrect) {
+    addedIngs.push(id);
+    if(btn){ btn.classList.add('correct-ing'); setTimeout(()=>btn.classList.add('used'),350); }
+    playS('click'); haptic(30);
+
+    // Check step complete
+    const allDone = step.ings.every(i=>addedIngs.includes(i));
+    if(allDone) {
+      const nextStep = stepIdx + 1;
+      if(nextStep >= recipe.steps.length) {
+        // All steps done → start cooking timer
+        setTimeout(()=>{
+          closeModal();
+          const slot = G.slots[cookingModal ? cookingModal.slotId : -1];
+          if(slot){ slot.prepping=false; slot.busy=true; slot.prog=0; slot.done=false; renderSlot(slot.id); }
+          cookingModal = null;
+        }, 400);
+      } else {
+        // Next step
+        setTimeout(()=>{
+          cookingModal.stepIdx = nextStep;
+          cookingModal.addedIngs = [];
+          renderModal();
+        }, 500);
+      }
+    } else {
+      // Refresh hint
+      const hint = document.querySelector('.modal-hint');
+      const remaining = step.ings.filter(i=>!addedIngs.includes(i));
+      if(hint && remaining.length>0) hint.textContent = `💡 Tiếp theo: ${INGS[remaining[0]].e} ${INGS[remaining[0]].n}`;
+    }
+  } else if(isWrong) {
+    if(btn){ btn.classList.add('wrong-ing'); setTimeout(()=>btn.classList.remove('wrong-ing'),400); }
+    // Minor penalty
+    G.time = Math.max(0, G.time-3);
+    playS('wrong'); haptic([60,30,60]);
+    tip2(`❌ Sai nguyên liệu! -3 giây`);
+  }
+}
+
+function cancelCook() {
+  if(!cookingModal) return;
+  const slot = G.slots[cookingModal.slotId];
+  if(slot){ slot.prepping=false; slot.rec=null; slot.busy=false; slot.done=false; slot.prog=0; renderSlot(slot.id); }
+  closeModal();
+  cookingModal = null;
+}
+
+function closeModalBg(e) {
+  if(e.target.classList.contains('modal-bg')) cancelCook();
+}
+
+function closeModal() {
+  const w = document.getElementById('modal-wrap');
+  if(w) w.innerHTML = '';
+}
+
+// ══════════════════════════════════════════
+// PICKUP & SERVE
+// ══════════════════════════════════════════
+function pickupDish(slotId) {
+  const slot = G.slots[slotId];
+  if(!slot||!slot.done) return;
+  if(G.hand){ tip2('👐 Đặt món đang cầm xuống trước!'); return; }
+  G.hand = {rec:slot.rec};
+  slot.rec=null; slot.done=false; slot.busy=false; slot.prog=0;
+  playS('click'); haptic(35);
+  renderSlot(slotId);
+  renderHand();
+  renderTables();
+}
+
+function dropDish(){ G.hand=null; renderHand(); renderTables(); }
+
+function clickTable(tid) {
+  const t = G.tables[tid];
+  if(t.state==='paying'){ doPay(t); return; }
+  if(t.state==='dirty'){ collectDirty(t); return; }
+  if(t.state==='occupied'&&t.cust){
+    if(!G.hand){ tip2(`🍽️ Nấu ${t.cust.order.e} ${t.cust.order.name} rồi mang lại!`); return; }
+    if(G.hand.rec.id===t.cust.order.id) serve(t);
+    else {
+      const el=document.getElementById('tb'+tid);
+      if(el){el.classList.add('shake');setTimeout(()=>el.classList.remove('shake'),450);}
+      tip2(`❌ Bàn ${tid+1} muốn ${t.cust.order.e} ${t.cust.order.name}!`);
+      playS('wrong'); haptic([55,25,55]);
+    }
+  }
+}
+
+function serve(t) {
+  const pat=t.cust.pat, base=G.hand.rec.price;
+  const tpct = pat>=75?.5:pat>=50?.25:pat>=20?.1:0;
+  const tip = Math.round(base*tpct*t.cust.tip);
+  G.money += base+tip; G.stats.served++; G.stats.tip+=tip;
+  t._pay={base,tip}; t.state='eating'; G.hand=null;
+  playS('coin'); haptic(50);
+  floatAt(`+${base+tip}đ`,t.id,'#FFD700');
+  if(tip>0) floatAt(`🤑 +${tip}tip`,t.id,'#00E676');
+  renderHand(); renderTable(t.id); renderTables();
+  setTimeout(()=>{t._pay=null;renderTable(t.id);},2000);
+}
+
+function doPay(t) {
+  // Dishes = food emoji + cutlery
+  const dishes = [t.cust.order.e,'🥢'];
+  if(Math.random()>.5) dishes.push('🥣');
+  if(Math.random()>.6) dishes.push('🫙');
+  t.dirty=dishes; t.cust=null; t.state='dirty';
+  playS('click'); renderTable(t.id);
+}
+
+// ══════════════════════════════════════════
+// DISH COLLECTION & WASHING
+// ══════════════════════════════════════════
+function collectDirty(t) {
+  // Put dirty dishes into tray
+  t.dirty.forEach(d=>G.tray.push(d));
+  t.dirty=[]; t.state='washing';
+  playS('click'); renderTable(t.id); renderTray();
+  setTimeout(()=>{ if(t.state==='washing'){t.state='empty';renderTable(t.id);} },800);
+}
+
+function sendTrayToSink() {
+  if(G.tray.length===0) return;
+  G.tray.forEach(d=>G.sink.pile.push(d));
+  G.tray=[];
+  renderTray(); renderSink();
+  tip2('💧 Dĩa đã chuyển vào bồn! Nhấn Rửa để rửa từng cái.');
+}
+
+function toggleWash() {
+  if(G.sink.pile.length===0){tip2('✅ Bồn trống rồi!');return;}
+  G.sink.on = !G.sink.on;
+  document.getElementById('wbtn').textContent = G.sink.on?'⏸ Dừng':'Rửa!';
+}
+
+function washOneDish() {
+  G.sink.pile.shift();
+  G.sink.prog=0; G.stats.washed++;
+  document.getElementById('wfill').style.width='0%';
+  playS('click');
+  renderSink();
+  if(G.sink.pile.length===0){
+    G.sink.on=false;
+    document.getElementById('wbtn').textContent='Rửa!';
+    tip2('✨ Sạch bóng hết rồi!');
+  }
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function renderAll(){ buildRecipeList(); renderSlots(); renderTables(); renderQueue(); renderHand(); renderTray(); renderSink(); updateHUD(); }
+
+function buildRecipeList() {
+  document.getElementById('recList').innerHTML = LV.recs.map(i=>{
+    const r=RECIPES[i];
+    return `<div class="rec" onclick="openCookModal('${r.id}')">
+      <span class="re">${r.e}</span>
+      <div>
+        <div class="rn">${r.name}</div>
+        <div class="rm"><span>⏱${r.cookTime}s</span><span class="rp">${r.price}đ</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSlots() {
+  document.getElementById('cslots').innerHTML = G.slots.map(s=>buildSlotHTML(s)).join('');
+}
+function renderSlot(id) {
+  const c=document.getElementById('cslots'); if(!c||!c.children[id]){renderSlots();return;}
+  const tmp=document.createElement('div'); tmp.innerHTML=buildSlotHTML(G.slots[id]);
+  c.children[id].replaceWith(tmp.firstChild);
+}
+function buildSlotHTML(s) {
+  if(s.prepping) return `<div class="cs prep" id="cs${s.id}">
+    <span class="cs-e">${s.rec?s.rec.e:'🥬'}</span>
+    <div class="cs-info"><div class="cs-nm">${s.rec?s.rec.name:'Đang chọn...'}</div>
+    <div class="cs-st">🥬 Chọn nguyên liệu...</div></div></div>`;
+  if(!s.rec) return `<div class="cs" id="cs${s.id}"><span class="cs-empty">🍳 Trống</span></div>`;
+  if(s.busy) return `<div class="cs cook" id="cs${s.id}">
+    <span class="cs-e">${s.rec.e}</span>
+    <div class="cs-info"><div class="cs-nm">${s.rec.name}</div>
+    <div class="cs-st">🔥 Đang nấu...</div>
+    <div class="cs-bar-w"><div class="cs-bar" style="width:${s.prog.toFixed(1)}%"></div></div></div></div>`;
+  return `<div class="cs done" id="cs${s.id}" onclick="pickupDish(${s.id})">
+    <span class="cs-e">${s.rec.e}</span>
+    <div class="cs-info"><div class="cs-nm">${s.rec.name}</div>
+    <div class="cs-ok">✅ Xong! Lấy →</div></div></div>`;
+}
+
+function renderTables() {
+  const g=document.getElementById('tblGrid');
+  const cols=LV.tables<=3?2:LV.tables<=5?2:LV.tables<=7?3:4;
+  g.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  g.innerHTML=G.tables.map(t=>buildTableHTML(t)).join('');
+}
+function renderTable(id) {
+  const el=document.getElementById('tb'+id);
+  if(!el){renderTables();return;}
+  const t=G.tables[id];
+  const isTarget=G.hand&&t.state==='occupied'&&t.cust?.order.id===G.hand.rec.id;
+  el.className=`tb ${t.state}${isTarget?' serve-ok':''}`;
+  el.innerHTML=buildTableInner(t);
+}
+function buildTableHTML(t) {
+  const isTarget=G.hand&&t.state==='occupied'&&t.cust?.order.id===G.hand.rec.id;
+  return `<div class="tb ${t.state}${isTarget?' serve-ok':''}" id="tb${t.id}" onclick="clickTable(${t.id})">${buildTableInner(t)}</div>`;
+}
+function buildTableInner(t) {
+  let h=`<div class="tb-num">🪑 Bàn ${t.id+1}</div>`;
+  if(t.state==='empty') return h+`<div class="t-empty">·· Trống ··</div>`;
+  if(t.state==='occupied'&&t.cust){
+    const p=t.cust.pat,pc=p>65?'hi':p>30?'md':'lo',face=p>65?'😊':p>30?'😐':'😟';
+    const vip=t.cust.vip?`<span style="font-size:.5rem;background:#FFD70018;color:#FFD700;border:1px solid #FFD70028;border-radius:4px;padding:0 3px;margin-left:2px">VIP</span>`:'';
+    return h+`<div class="tc"><span class="tav">${t.cust.av}</span>
+      <div class="tinf"><div class="tnm">${t.cust.n}${vip}</div>
+      <div class="tor"><span style="font-size:.85rem">${t.cust.order.e}</span>${t.cust.order.name}</div></div>
+      <span style="font-size:.88rem">${face}</span></div>
+      <div class="pw"><div class="pb ${pc}" style="width:${p.toFixed(1)}%"></div></div>`;
+  }
+  if(t.state==='eating'&&t.cust){
+    return h+`<div class="tc"><span class="tav">${t.cust.av}</span>
+      <div class="tinf"><div class="tnm">${t.cust.n}</div>
+      <div class="tor" style="color:#4CAF50">😋 Đang ăn...</div></div></div>`
+      +(t._pay?`<div class="pay-ov"><div class="pay-amt">💰${t._pay.base}đ</div>${t._pay.tip>0?`<div class="pay-tip">+${t._pay.tip}đ tip🤑</div>`:''}</div>`:'');
+  }
+  if(t.state==='paying'){
+    return h+`<div class="tc"><span class="tav">${t.cust?.av||'👤'}</span>
+      <div class="tinf"><div class="tnm">${t.cust?.n||''}</div>
+      <div class="tor" style="color:#FFD700">💳 Xong rồi!</div></div></div>
+      <div class="th" style="color:#FFD700">👆 Thu tiền</div>`;
+  }
+  if(t.state==='dirty'){
+    return h+`<div class="dp">${t.dirty.join(' ')}</div>
+      <div class="th" style="color:#FF8C00">👆 Thu dĩa</div>`;
+  }
+  if(t.state==='washing'){
+    return h+`<div style="text-align:center;padding:5px;font-size:.9rem">💧<br><span style="font-size:.6rem;color:#29B6F6">Đang dọn...</span></div>`;
+  }
+  return h;
+}
+
+function renderQueue(){
+  document.getElementById('qcnt').textContent=G.queue.length;
+  document.getElementById('qlist').innerHTML=G.queue.map(c=>`<div class="qp">${c.av}${c.n}<span style="color:#FF8C00">${c.order.e}</span></div>`).join('');
+}
+function renderHand(){
+  const e=document.getElementById('handEmpty'),d=document.getElementById('handDish');
+  if(G.hand){e.style.display='none';d.style.display='block';document.getElementById('handE').textContent=G.hand.rec.e;document.getElementById('handN').textContent=G.hand.rec.name;}
+  else{e.style.display='block';d.style.display='none';}
+}
+function renderTray(){
+  const empty=document.getElementById('trayEmpty'),dd=document.getElementById('trayDishes');
+  if(G.tray.length===0){empty.style.display='block';dd.style.display='none';}
+  else{
+    empty.style.display='none';dd.style.display='flex';
+    document.getElementById('trayPile').innerHTML=G.tray.map(d=>`<span class="dc">${d}</span>`).join('');
+    document.getElementById('trayCnt').textContent=`${G.tray.length} cái`;
+  }
+}
+function renderSink(){
+  document.getElementById('sinkPile').innerHTML=G.sink.pile.map((d,i)=>`<span class="dc${i===0&&G.sink.on?' washing-it':''}">${d}</span>`).join('');
+  document.getElementById('wcnt').textContent=`${G.sink.pile.length} cái`;
+  const btn=document.getElementById('wbtn');
+  btn.disabled=G.sink.pile.length===0;
+  btn.textContent=G.sink.on?'⏸ Dừng':'Rửa!';
+}
+function updateHUD(){
+  document.getElementById('hudMo').textContent=`💰${G.money.toLocaleString()}đ`;
+  const m=Math.floor(G.time/60),s=Math.floor(G.time%60);
+  const td=document.getElementById('hudTm');
+  td.textContent=`⏱${m}:${String(s).padStart(2,'0')}`;
+  td.className='hud-tm'+(G.time<30?' warn':'');
+  const r=Math.round(G.rep);
+  document.getElementById('hudRp').textContent='⭐'.repeat(r)+'☆'.repeat(5-r);
+}
+
+// ══════════════════════════════════════════
+// END
+// ══════════════════════════════════════════
+function endGame(){
+  if(!G||!G.running) return;
+  G.running=false; closeModal(); clearInterval(gameTimer);
+  if(!scores[LV.id]||G.money>scores[LV.id]){scores[LV.id]=G.money;localStorage.setItem('nhph3',JSON.stringify(scores));}
+  const win=G.money>=LV.target;
+  const stars=G.money>=LV.target*1.5?3:win?2:G.money>=LV.target*.5?1:0;
+  const msgs=win?(stars===3?['🏆 Xuất Sắc!','🎊']:['🎉 Hoàn Thành!','✨']):['😅 Chưa đủ tiền!','💸'];
+  document.getElementById('resE').textContent=msgs[1];
+  document.getElementById('resT').textContent=msgs[0];
+  document.getElementById('resS').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  document.getElementById('resM').textContent=G.money.toLocaleString()+'đ';
+  document.getElementById('resTg').textContent=`Mục tiêu: ${LV.target.toLocaleString()}đ`;
+  document.getElementById('resSt').innerHTML=`
+    <div class="rs"><div class="rsv">🍽️${G.stats.served}</div><div class="rsl">Món phục vụ</div></div>
+    <div class="rs"><div class="rsv">💰${G.stats.tip}đ</div><div class="rsl">Tổng tip</div></div>
+    <div class="rs"><div class="rsv">💧${G.stats.washed}</div><div class="rsl">Dĩa đã rửa</div></div>
+    <div class="rs"><div class="rsv">😡${G.stats.angry}</div><div class="rsl">Khách bỏ đi</div></div>`;
+  const nxt=LEVELS.find(l=>l.id===LV.id+1);
+  const btnN=document.getElementById('btnNx');
+  if(nxt&&win){btnN.style.display='';btnN.textContent=`Màn ${nxt.id} →`;}else btnN.style.display='none';
+  showScreen('result');
+  if(win){confetti();playS('win');haptic([50,30,50,30,100]);}else playS('wrong');
+}
+
+function nextLevel(){startGame(LV.id+1);}
+function goHome(){clearInterval(gameTimer);closeModal();if(G)G.running=false;showScreen('home');renderHome();}
+function confirmQuit(){if(confirm('Thoát? Tiến độ sẽ mất!')){clearInterval(gameTimer);closeModal();if(G)G.running=false;goHome();}}
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function floatAt(txt,tid,color){
+  const el=document.getElementById('tb'+tid); if(!el) return;
+  const r=el.getBoundingClientRect();
+  const d=document.createElement('div'); d.className='ftxt'; d.textContent=txt;
+  d.style.cssText=`color:${color};left:${r.left+r.width/2-20}px;top:${r.top}px`;
+  document.body.appendChild(d); setTimeout(()=>d.remove(),1200);
+}
+
+let toastTO;
+function tip2(txt){
+  const el=document.getElementById('toast');
+  el.textContent=txt;el.classList.add('show');
+  clearTimeout(toastTO);toastTO=setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+let tipEl=null,tipTO;
+function showTip(txt){clearTimeout(tipTO);if(!tipEl){tipEl=document.createElement('div');tipEl.className='tipbub';document.body.appendChild(tipEl);}tipEl.textContent=txt;tipTO=setTimeout(()=>{if(tipEl){tipEl.remove();tipEl=null;}},3500);}
+
+function confetti(){
+  ['🎉','✨','💰','⭐','🏆','🎊'].forEach(ch=>{
+    for(let i=0;i<4;i++)setTimeout(()=>{
+      const d=document.createElement('div');d.className='cf';d.textContent=ch;
+      const dur=2+Math.random()*2;
+      d.style.cssText=`left:${Math.random()*100}vw;font-size:${.9+Math.random()*.7}rem;animation-duration:${dur}s`;
+      document.body.appendChild(d);setTimeout(()=>d.remove(),dur*1000+100);
+    },i*55+Math.random()*180);
+  });
+}
+
+// ══════════════════════════════════════════
+// SOUND
+// ══════════════════════════════════════════
+let aC=null;
+function gC(){if(!aC){try{aC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return aC;}
+function playS(type){
+  const c=gC();if(!c)return;
+  try{
+    const o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    const t=c.currentTime;
+    if(type==='coin'){o.frequency.setValueAtTime(880,t);o.frequency.setValueAtTime(1100,t+.06);o.frequency.setValueAtTime(1320,t+.12);g.gain.setValueAtTime(.14,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}
+    else if(type==='ding'){o.frequency.setValueAtTime(1200,t);g.gain.setValueAtTime(.11,t);g.gain.exponentialRampToValueAtTime(.001,t+.38);o.start(t);o.stop(t+.38);}
+    else if(type==='wrong'){o.type='sawtooth';o.frequency.setValueAtTime(220,t);o.frequency.setValueAtTime(155,t+.1);g.gain.setValueAtTime(.09,t);g.gain.exponentialRampToValueAtTime(.001,t+.22);o.start(t);o.stop(t+.22);}
+    else if(type==='click'){o.frequency.setValueAtTime(640,t);g.gain.setValueAtTime(.055,t);g.gain.exponentialRampToValueAtTime(.001,t+.065);o.start(t);o.stop(t+.065);}
+    else if(type==='win'){[523,659,784,1047].forEach((f,i)=>{const o2=c.createOscillator(),g2=c.createGain();o2.connect(g2);g2.connect(c.destination);o2.frequency.value=f;g2.gain.setValueAtTime(.12,t+i*.11);g2.gain.exponentialRampToValueAtTime(.001,t+i*.11+.28);o2.start(t+i*.11);o2.stop(t+i*.11+.28);});}
+  }catch(e){}
+}
+function haptic(p){if(navigator.vibrate)navigator.vibrate(p);}
+document.addEventListener('touchstart',()=>gC(),{once:true});
+document.addEventListener('click',()=>gC(),{once:true});
+
+// ══════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════
+renderHome();
+</script>
+</body>
+</html>
