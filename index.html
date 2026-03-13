@@ -3,358 +3,298 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>🍜 Nhà Hàng Phố</title>
+<title>🌍 World Kitchen 3D</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#080300;--panel:#120500;--k:#0e0400;
-  --amber:#FF8C00;--gold:#FFB300;--cream:#FFE0B2;
-  --jade:#00C897;--red:#F44336;--blue:#29B6F6;
-  --border:rgba(255,140,0,0.18);
-  --fh:'Baloo 2',cursive;--fb:'Nunito',sans-serif;
+  --bg:#04020a;--fh:'Baloo 2',cursive;--fb:'Nunito',sans-serif;
+  --gold:#FFD700;--amber:#FF8C00;--cream:#FFE8CC;
+  --panel:rgba(6,2,16,.94);--border:rgba(255,200,60,.13);
+  --green:#00E676;--red:#FF1744;--blue:#40C4FF;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--cream);font-family:var(--fb);font-size:13px}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--cream);font-family:var(--fb)}
 .screen{display:none;height:100dvh;flex-direction:column;overflow:hidden}
 .screen.active{display:flex}
 
-/* ── HOME ── */
-#home{align-items:center;justify-content:center;gap:18px;padding:16px;
-  background:radial-gradient(ellipse at 40% 60%,#3d100028,transparent 55%),var(--bg)}
-.sign{background:linear-gradient(145deg,#280d00,#160400);border:2px solid #FF8C0028;
-  border-radius:22px;padding:22px 32px;text-align:center;box-shadow:0 0 40px #ff8c001a}
-.lanterns{font-size:1.7rem;letter-spacing:9px;animation:sw 3s ease-in-out infinite;display:block}
-@keyframes sw{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-.g-title{font-family:var(--fh);font-size:clamp(2.4rem,7vw,4rem);font-weight:800;
-  background:linear-gradient(135deg,#FFD700,#FF8C00,#FF4500);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;
-  filter:drop-shadow(0 0 12px #ff8c0044)}
-.g-sub{color:#FF8C0055;font-size:.78rem;letter-spacing:3px;text-transform:uppercase}
-.lv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:480px}
-.lv-card{background:#FF8C0008;border:1.5px solid var(--border);border-radius:14px;
-  padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.lv-card:hover{background:#FF8C0014;border-color:#FF8C0035;transform:translateY(-3px)}
-.lv-card:active{transform:scale(.96)}
-.lv-card.locked{opacity:.35;cursor:not-allowed}
-.lv-card.locked:hover{transform:none}
-.lv-e{font-size:2rem;display:block;margin-bottom:4px}
-.lv-nm{font-family:var(--fh);font-size:.88rem;color:#FFD700;font-weight:700;margin-bottom:2px}
-.lv-ds{font-size:.66rem;color:#FF8C0066;margin-bottom:5px}
-.lv-tg{font-size:.68rem;background:#FF8C0012;border:1px solid #FF8C002a;border-radius:16px;padding:1px 7px;display:inline-block;color:#FFB300}
-.lv-st{font-size:.8rem;margin-top:4px}
-.lock-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:#00000055;border-radius:13px}
+/* ─── HOME ─── */
+#home{background:radial-gradient(ellipse 80% 60% at 50% 20%,#1a0640 0%,#04020a 70%);
+  align-items:center;justify-content:flex-start;padding:10px 14px;gap:10px;overflow-y:auto}
+.home-hdr{text-align:center;padding:6px 0}
+.globe-spin{font-size:3.2rem;display:inline-block;animation:globeSpin 6s linear infinite}
+@keyframes globeSpin{to{transform:rotate(360deg)}}
+.g-title{font-family:var(--fh);font-size:clamp(2rem,6vw,3.2rem);font-weight:800;
+  background:linear-gradient(135deg,#FFD700 0%,#FF6B35 45%,#E040FB 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.05;
+  filter:drop-shadow(0 0 16px #FF8C0040)}
+.g-sub{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:#9C27B055;margin-top:3px}
+.region-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;max-width:520px}
+@media(min-width:480px){.region-grid{grid-template-columns:repeat(5,1fr)}}
+.rgcard{background:linear-gradient(145deg,#0e0625,#08031a);border:1.5px solid var(--border);
+  border-radius:14px;padding:10px 7px;text-align:center;cursor:pointer;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.rgcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,200,60,.04),transparent);pointer-events:none}
+.rgcard:hover{transform:translateY(-3px) scale(1.02);border-color:rgba(255,200,60,.28);box-shadow:0 8px 24px rgba(160,80,255,.18)}
+.rgcard:active{transform:scale(.93)}
+.rgcard.locked{opacity:.35;cursor:not-allowed}
+.rgcard.locked:hover{transform:none;box-shadow:none}
+.rg-flag{font-size:1.8rem;display:block;margin-bottom:3px}
+.rg-name{font-family:var(--fh);font-size:.68rem;color:var(--gold);font-weight:700}
+.rg-best{font-size:.52rem;color:#ffffff33;margin-top:2px}
+.rg-stars{font-size:.6rem;color:var(--amber);margin-top:1px}
+.rg-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;background:#00000066;border-radius:13px}
+.home-tip{font-size:.56rem;color:#ffffff14;text-align:center;padding:4px}
 
-/* ── HUD ── */
-#game{background:var(--bg)}
-.hud{display:flex;align-items:center;gap:7px;padding:6px 9px;
-  background:rgba(12,4,0,.97);border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
-.hud-btn{background:#FF8C0012;border:1px solid var(--border);color:var(--cream);
-  border-radius:7px;padding:3px 9px;font-size:.78rem;font-weight:700;cursor:pointer;
-  font-family:var(--fb);transition:all .15s}
-.hud-btn:hover{background:#FF8C002a}
-.hud-lv{font-family:var(--fh);font-size:.88rem;color:#FFD700;font-weight:700;flex:1;min-width:0;
-  overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.hud-mo{font-family:var(--fh);font-size:.88rem;color:#FFB300;font-weight:700;white-space:nowrap}
-.hud-tm{font-family:var(--fh);font-size:.88rem;font-weight:700;white-space:nowrap}
-.hud-tm.warn{color:#FF4500;animation:bl .55s infinite}
-@keyframes bl{0%,100%{opacity:1}50%{opacity:.35}}
-.hud-rp{font-size:.8rem;white-space:nowrap}
+/* ─── LEVEL SELECT ─── */
+#levelSelect{background:radial-gradient(ellipse at 50% 0%,#220850,#04020a);
+  align-items:center;padding:12px 14px;gap:10px;overflow-y:auto}
+.ls-hdr{text-align:center;width:100%}
+.ls-flag{font-size:2.8rem;display:block;animation:globeSpin 8s linear infinite}
+.ls-name{font-family:var(--fh);font-size:1.5rem;color:var(--gold);font-weight:800}
+.ls-desc{font-size:.6rem;color:#ffffff38;letter-spacing:2px;margin-top:2px;text-transform:uppercase}
+.lv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;max-width:520px}
+@media(min-width:480px){.lv-grid{grid-template-columns:repeat(5,1fr)}}
+.lv-card{background:#FF8C0007;border:1.5px solid var(--border);border-radius:11px;
+  padding:10px 6px;text-align:center;cursor:pointer;transition:all .16s;position:relative;overflow:hidden}
+.lv-card:hover:not(.locked){background:#FF8C0018;transform:translateY(-2px);border-color:#FF8C0030}
+.lv-card.locked{opacity:.28;cursor:not-allowed}
+.lv-card.done{border-color:#FFD70030;background:#FFD70009}
+.lv-num{font-family:var(--fh);font-size:1.15rem;color:var(--gold);font-weight:800}
+.lv-tg{font-size:.54rem;color:#FF8C0060;margin:2px 0}
+.lv-st{font-size:.72rem}
+.back-btn{background:#ffffff09;border:1px solid var(--border);color:var(--cream);
+  border-radius:22px;padding:7px 20px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:var(--fb)}
 
-/* ── LAYOUT ── */
-.gbody{display:flex;flex:1;overflow:hidden;min-height:0}
+/* ─── GAME ─── */
+#game{position:relative;overflow:hidden;background:#04020a}
+#gameCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 
-/* ── KITCHEN ── */
-.kitchen{width:clamp(120px,30%,175px);background:var(--k);border-right:1px solid #FF8C0012;
-  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
-.zh{font-family:var(--fh);font-size:.7rem;font-weight:700;padding:5px 7px;
-  background:#FF8C000d;border-bottom:1px solid var(--border);color:#FF8C00;letter-spacing:.5px}
-.rec-list{padding:5px;display:flex;flex-direction:column;gap:4px;overflow-y:auto;flex:1}
-.rec{background:#FF8C0008;border:1px solid var(--border);border-radius:9px;
-  padding:6px 7px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
-.rec:hover{background:#FF8C0018;border-color:#FF8C003a}
-.rec:active{transform:scale(.94)}
-.rec.disabled{opacity:.35;cursor:not-allowed}
-.re{font-size:1.3rem;flex-shrink:0}
-.rn{font-size:.7rem;font-weight:700;color:var(--cream)}
-.rm{font-size:.6rem;color:#FF8C0077;display:flex;gap:4px;margin-top:1px}
-.rp{font-size:.58rem;background:#FFB30018;color:#FFB300;border:1px solid #FFB30032;border-radius:7px;padding:0 4px}
+/* HUD bar */
+.ghud{position:absolute;top:0;left:0;right:0;
+  background:linear-gradient(180deg,rgba(4,2,10,.97) 0%,rgba(4,2,10,.0) 100%);
+  display:flex;align-items:center;gap:5px;padding:6px 8px 14px;pointer-events:none;z-index:20}
+.ghud-btn{pointer-events:all;background:#ffffff0d;border:1px solid var(--border);
+  color:var(--cream);border-radius:7px;padding:4px 9px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--fb)}
+.ghud-lv{font-family:var(--fh);font-size:.78rem;color:var(--gold);font-weight:700;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ghud-mo{font-family:var(--fh);font-size:.82rem;color:#FFB300;font-weight:700;white-space:nowrap}
+.ghud-tm{font-family:var(--fh);font-size:.82rem;font-weight:700;white-space:nowrap}
+.ghud-tm.warn{color:var(--red);animation:blink .45s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.ghud-stars{font-size:.62rem;white-space:nowrap}
 
-/* Cook progress slots */
-.cslots{padding:5px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
-.cs{background:#FF8C0007;border:1px dashed #FF8C0020;border-radius:9px;
-  padding:6px;min-height:48px;display:flex;align-items:center;gap:6px}
-.cs.prep{border-color:#FFB30066;background:#FFB30010;border-style:solid}
-.cs.cook{border-color:#FF8C0055;background:#FF8C0010;border-style:solid}
-.cs.done{border-color:#00C897;background:#00C89712;cursor:pointer;border-style:solid;
-  animation:rg 1.2s infinite}
-@keyframes rg{0%,100%{box-shadow:0 0 0 0 #00C89722}50%{box-shadow:0 0 0 5px #00C89700}}
-.cs.done:active{transform:scale(.94)}
-.cs-e{font-size:1.3rem;flex-shrink:0}
-.cs-info{flex:1;min-width:0}
-.cs-nm{font-size:.68rem;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cs-st{font-size:.6rem;color:#FF8C0066}
-.cs-bar-w{height:3px;background:#ffffff0e;border-radius:2px;margin-top:3px;overflow:hidden}
-.cs-bar{height:100%;background:linear-gradient(90deg,#FF8C00,#FFD700);border-radius:2px}
-.cs-ok{font-size:.6rem;font-weight:700;color:#00C897}
-.cs-empty{font-size:.64rem;color:#FF8C0020;width:100%;text-align:center}
+/* Status bar bottom */
+.gstatus{position:absolute;bottom:0;left:0;right:0;height:42px;
+  background:linear-gradient(0deg,rgba(4,2,10,.97) 0%,transparent 100%);
+  display:flex;align-items:center;gap:7px;padding:0 10px 4px;z-index:20;pointer-events:none}
+.chef-carry-icon{font-size:1.4rem;transition:all .2s;transform-origin:center}
+.chef-carry-icon.has-item{animation:carryBob .8s ease-in-out infinite}
+@keyframes carryBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.status-txt{font-size:.65rem;color:var(--cream);font-weight:700;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tap-hint{font-size:.56rem;color:#ffffff25;white-space:nowrap}
 
-/* ── FLOOR ── */
-.floor{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:#0b0400}
-.tbl-grid{flex:1;display:grid;padding:7px;gap:7px;overflow-y:auto;align-content:start}
-.tb{background:#FF8C0005;border:2px solid var(--border);border-radius:12px;
-  padding:7px;cursor:pointer;transition:border-color .15s,background .15s;
-  position:relative;min-height:78px;display:flex;flex-direction:column;gap:3px}
-.tb:hover{border-color:#FF8C002a}
-.tb:active{transform:scale(.96)}
-.tb.occupied{border-color:#FF8C0038;background:#FF8C0008}
-.tb.eating{border-color:#4CAF5035;background:#4CAF5006}
-.tb.paying{border-color:#FFD700;background:#FFD70009;animation:pg 1s infinite}
-@keyframes pg{0%,100%{box-shadow:0 0 0 0 #FFD70022}50%{box-shadow:0 0 0 6px #FFD70000}}
-.tb.dirty{border-color:#8D6E6330}
-.tb.dirty:hover{border-color:#FF8C0042;background:#FF8C000c}
-.tb.washing{border-color:#29B6F630;background:#29B6F608}
-.tb.serve-ok{border-color:#00E676!important;background:#00E67610!important;animation:sg .7s infinite!important}
-@keyframes sg{0%,100%{box-shadow:0 0 0 0 #00E67633}50%{box-shadow:0 0 0 8px #00E67600}}
-.tb.shake{animation:shk .4s!important}
-@keyframes shk{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.tb-num{font-size:.58rem;color:#FF8C0033;font-weight:700}
-.tc{display:flex;align-items:center;gap:5px}
-.tav{font-size:1.3rem;flex-shrink:0}
-.tinf{flex:1;min-width:0}
-.tnm{font-size:.66rem;font-weight:700;color:var(--cream);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.tor{font-size:.62rem;color:#FF8C00;display:flex;align-items:center;gap:2px}
-.pw{height:3px;background:#ffffff0c;border-radius:2px;overflow:hidden;margin-top:2px}
-.pb{height:100%;border-radius:2px;transition:width .4s,background .4s}
-.pb.hi{background:linear-gradient(90deg,#00E676,#69F0AE)}
-.pb.md{background:linear-gradient(90deg,#FFB300,#FFD740)}
-.pb.lo{background:linear-gradient(90deg,#FF1744,#FF6D00)}
-.t-empty{text-align:center;margin-top:4px;font-size:1rem;color:#FF8C0010}
-.pay-ov{position:absolute;inset:0;background:#000000aa;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;z-index:5}
-.pay-amt{font-family:var(--fh);font-size:.88rem;color:#FFD700;font-weight:800}
-.pay-tip{font-size:.62rem;color:#00E676;font-weight:700}
-.dp{font-size:.88rem;text-align:center;padding:3px 0;line-height:1.4}
-.th{text-align:center;font-size:.6rem;font-weight:700;margin-top:2px}
+/* Recipe panel */
+.rpanel{position:absolute;top:46px;left:0;bottom:46px;width:122px;
+  background:var(--panel);border-right:1px solid var(--border);backdrop-filter:blur(4px);
+  display:flex;flex-direction:column;z-index:15;transition:transform .22s ease}
+.rpanel.closed{transform:translateX(-100%)}
+.rpanel-hdr{font-size:.6rem;color:var(--amber);font-weight:700;padding:5px 7px;
+  background:#FF8C000a;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:3px}
+.rlist{flex:1;overflow-y:auto;padding:3px;display:flex;flex-direction:column;gap:3px}
+.ritem{background:#FF8C0007;border:1.5px solid var(--border);border-radius:8px;
+  padding:5px;cursor:pointer;transition:all .14s}
+.ritem:hover{background:#FF8C0018;border-color:#FF8C0033}
+.ritem.selected{border-color:var(--gold);background:#FFD70012}
+.ritem:active{transform:scale(.92)}
+.ri-e{font-size:1.35rem;display:block;text-align:center;margin-bottom:2px}
+.ri-name{font-size:.54rem;font-weight:700;color:var(--cream);text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ri-info{font-size:.48rem;color:#FF8C0055;text-align:center;margin-top:1px}
+.ri-cooking{font-size:.44rem;color:var(--green);text-align:center;font-weight:700}
+.ri-ings{display:flex;justify-content:center;gap:1px;margin-top:2px;flex-wrap:wrap}
+.ri-ing-dot{font-size:.65rem}
 
-/* ── QUEUE ── */
-.qarea{padding:5px 7px;background:#00000033;border-top:1px solid var(--border);flex-shrink:0}
-.qhd{font-size:.62rem;color:#FF8C0055;font-weight:700;margin-bottom:3px}
-.qlist{display:flex;gap:4px;flex-wrap:wrap}
-.qp{background:#FF8C000a;border:1px solid var(--border);border-radius:7px;
-  padding:2px 6px;font-size:.65rem;display:flex;align-items:center;gap:2px;
-  animation:pi .22s cubic-bezier(.34,1.56,.64,1)}
-@keyframes pi{from{transform:scale(0)}to{transform:scale(1)}}
+/* Tab handles */
+.rpanel-tab,.opanel-tab{position:absolute;top:50%;background:var(--panel);
+  border:1px solid var(--border);padding:7px 3px;font-size:.56rem;cursor:pointer;
+  z-index:16;writing-mode:vertical-lr;letter-spacing:1px;color:var(--cream);
+  backdrop-filter:blur(4px);transition:all .22s}
+.rpanel-tab{left:122px;transform:translateY(-50%);border-left:none;border-radius:0 7px 7px 0}
+.rpanel-tab.closed{left:0}
+.opanel-tab{right:110px;transform:translateY(-50%);border-right:none;border-radius:7px 0 0 7px}
+.opanel-tab.closed{right:0}
 
-/* ── BOTTOM ── */
-.bbar{display:flex;border-top:1px solid #001510;flex-shrink:0;min-height:54px}
+/* Orders panel */
+.opanel{position:absolute;top:46px;right:0;width:110px;max-height:55%;
+  background:var(--panel);border-left:1px solid var(--border);backdrop-filter:blur(4px);
+  z-index:15;transition:transform .22s ease;display:flex;flex-direction:column}
+.opanel.closed{transform:translateX(100%)}
+.opanel-hdr{font-size:.6rem;color:var(--blue);font-weight:700;padding:5px 7px;
+  background:#40C4FF08;border-bottom:1px solid var(--border)}
+.olist{flex:1;overflow-y:auto;padding:3px;display:flex;flex-direction:column;gap:3px}
+.oitem{background:#40C4FF06;border:1px solid #40C4FF18;border-radius:6px;
+  padding:4px 5px;cursor:pointer;display:flex;align-items:center;gap:3px}
+.oitem:hover{background:#40C4FF10}
+.oi-tb{font-size:.5rem;color:var(--blue);font-weight:700;width:16px;flex-shrink:0}
+.oi-e{font-size:.9rem;flex-shrink:0}
+.oi-body{flex:1;min-width:0}
+.oi-nm{font-size:.48rem;color:var(--cream);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.oi-bw{height:3px;background:#ffffff0c;border-radius:2px;margin-top:2px;overflow:hidden}
+.oi-bf{height:100%;border-radius:2px;transition:width .4s,background .4s}
+.oi-bf.hi{background:linear-gradient(90deg,#00E676,#69F0AE)}
+.oi-bf.md{background:linear-gradient(90deg,#FFB300,#FFD740)}
+.oi-bf.lo{background:linear-gradient(90deg,#FF1744,#FF6D00)}
+.no-orders{font-size:.56rem;color:#ffffff16;padding:8px;text-align:center}
 
-/* SINK */
-.sink{flex:1;background:#001410;padding:6px 8px;display:flex;align-items:center;gap:7px;overflow:hidden;min-width:0}
-.sink-hd{font-family:var(--fh);font-size:.65rem;color:#26C6DA;white-space:nowrap;font-weight:700}
-.sink-pile{display:flex;flex-wrap:wrap;gap:2px;flex:1;align-items:center;min-width:0;max-height:40px;overflow:hidden}
-.dc{font-size:.95rem;position:relative;cursor:default}
-.dc.washing-it{animation:spinW .8s linear infinite}
-@keyframes spinW{to{transform:rotate(360deg)}}
-.wash-ctrl{display:flex;flex-direction:column;align-items:center;gap:1px;flex-shrink:0}
-.wb{background:linear-gradient(135deg,#005c60,#00ACC1);border:none;border-radius:8px;
-  padding:5px 10px;color:#fff;font-family:var(--fb);font-weight:700;font-size:.7rem;
-  cursor:pointer;transition:all .15s;white-space:nowrap}
-.wb:hover{filter:brightness(1.15)}
-.wb:active{transform:scale(.92)}
-.wb:disabled{opacity:.3;cursor:not-allowed}
-.wbar-w{width:52px}
-.wbar{height:4px;background:#ffffff0e;border-radius:2px;overflow:hidden;margin-top:1px}
-.wbar-f{height:100%;background:linear-gradient(90deg,#00BCD4,#80DEEA);border-radius:2px;transition:width .08s}
-.wcnt{font-size:.58rem;color:#26C6DA55;text-align:center}
+/* Ingredient collection overlay */
+.ing-overlay{position:absolute;bottom:50px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,rgba(10,4,24,.97),rgba(6,2,14,.97));
+  border:1.5px solid var(--border);border-radius:16px;padding:10px 14px;
+  z-index:30;min-width:220px;max-width:90vw;text-align:center;
+  pointer-events:all;
+  animation:overlayIn .22s cubic-bezier(.34,1.56,.64,1)}
+@keyframes overlayIn{from{transform:translateX(-50%) scale(.8);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+.io-title{font-family:var(--fh);font-size:.85rem;color:var(--gold);font-weight:800;margin-bottom:8px}
+.io-ing-row{display:flex;gap:7px;justify-content:center;margin-bottom:8px}
+.io-ing{background:#FF8C0008;border:2px solid var(--border);border-radius:9px;
+  padding:7px 8px;min-width:48px;text-align:center;cursor:pointer;transition:all .15s}
+.io-ing:hover{background:#FF8C0018;transform:scale(1.07)}
+.io-ing:active{transform:scale(.91)}
+.io-ing.collected{border-color:var(--green);background:#00E67618;cursor:not-allowed}
+.io-ing.next{border-color:var(--gold);background:#FFD70012;animation:ingPulse .7s infinite}
+@keyframes ingPulse{0%,100%{box-shadow:0 0 0 0 #FFD70030}50%{box-shadow:0 0 0 5px #FFD70000}}
+.io-ie{font-size:1.4rem;display:block}
+.io-in{font-size:.48rem;color:var(--cream);margin-top:2px}
+.io-hint{font-size:.56rem;color:#ffffff35;margin-top:4px}
+.io-cancel{background:#FF17440c;border:1px solid #FF174425;color:#FF1744;
+  border-radius:7px;padding:3px 10px;font-size:.58rem;cursor:pointer;font-family:var(--fb);margin-top:6px}
 
-/* TRAY */
-.tray{width:clamp(80px,22%,130px);background:#001a0a;border-left:1px solid #00C89718;
-  padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0}
-.tray-hd{font-size:.58rem;color:#00C89755;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.tray-empty{font-size:.64rem;color:#ffffff15;text-align:center}
-.tray-dishes{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;max-height:36px;overflow:hidden}
-.tray-cnt{font-size:.62rem;color:#00C897;font-weight:700}
-.tray-btn{font-size:.6rem;background:#00C89718;border:1px solid #00C89730;color:#00C897;
-  border-radius:6px;padding:2px 6px;cursor:pointer;font-family:var(--fb);margin-top:2px}
-.tray-btn:active{transform:scale(.92)}
+/* Cook button */
+.cook-fab{position:absolute;bottom:50px;right:10px;
+  background:linear-gradient(135deg,#E65100,#FF8C00);border:none;border-radius:50px;
+  padding:8px 14px;color:#fff;font-family:var(--fb);font-weight:800;font-size:.72rem;
+  cursor:pointer;z-index:25;box-shadow:0 3px 14px #FF8C0055;
+  transition:all .18s;pointer-events:all;display:flex;align-items:center;gap:5px}
+.cook-fab:hover{transform:scale(1.06);box-shadow:0 4px 18px #FF8C0077}
+.cook-fab:active{transform:scale(.91)}
+.cook-fab.hidden{display:none}
+.cook-fab-icon{font-size:1rem}
 
-/* HAND */
-.hand{width:clamp(76px,20%,120px);background:#00200a;border-left:1px solid #00C85315;
-  padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0}
-.hand-hd{font-size:.58rem;color:#00C85355;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.hand-empty{font-size:.62rem;color:#ffffff15;text-align:center}
-.hand-dish{text-align:center}
-.hand-e{font-size:1.7rem;display:block;animation:fy 1.5s ease-in-out infinite}
-@keyframes fy{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.hand-n{font-size:.62rem;color:#00E676;font-weight:700;margin-top:1px}
-.drop-btn{font-size:.58rem;background:#FF17441a;border:1px solid #FF174430;color:#FF1744;
-  border-radius:5px;padding:2px 5px;cursor:pointer;font-family:var(--fb);margin-top:2px}
-
-/* ── INGREDIENT MODAL ── */
-.modal-bg{position:fixed;inset:0;background:#000000cc;z-index:200;
-  display:flex;align-items:flex-end;justify-content:center;
-  animation:mfade .2s ease-out}
-@keyframes mfade{from{opacity:0}to{opacity:1}}
-.modal{background:linear-gradient(160deg,#1c0800,#110400);border:1.5px solid #FF8C0033;
-  border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:16px;
-  animation:mslide .3s cubic-bezier(.34,1.56,.64,1)}
-@keyframes mslide{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-hd{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.modal-e{font-size:2rem}
-.modal-title{font-family:var(--fh);font-size:1.1rem;color:#FFD700;font-weight:700;flex:1}
-.modal-close{background:#FF8C0015;border:1px solid #FF8C0030;color:var(--cream);
-  border-radius:8px;padding:4px 10px;font-size:.8rem;cursor:pointer;font-family:var(--fb);font-weight:700}
-.modal-progress{margin-bottom:10px}
-.mp-label{font-size:.68rem;color:#FF8C0077;margin-bottom:4px;display:flex;justify-content:space-between}
-.mp-bar-w{height:7px;background:#ffffff0e;border-radius:4px;overflow:hidden}
-.mp-bar{height:100%;background:linear-gradient(90deg,#FF8C00,#FFD700);border-radius:4px;transition:width .3s}
-.ing-title{font-size:.7rem;color:#FF8C0077;font-weight:700;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
-.ing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:7px;margin-bottom:12px}
-.ing-btn{background:#FF8C0008;border:2px solid var(--border);border-radius:10px;
-  padding:8px 5px;text-align:center;cursor:pointer;transition:all .2s}
-.ing-btn:hover:not(.used):not(.wrong-ing):not(.correct-ing){background:#FF8C0018;border-color:#FF8C0035;transform:scale(1.05)}
-.ing-btn:active:not(.used){transform:scale(.92)}
-.ing-btn.correct-ing{background:#00C89722;border-color:#00C897;animation:cpop .35s cubic-bezier(.34,1.56,.64,1)}
-@keyframes cpop{0%{transform:scale(.8)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
-.ing-btn.wrong-ing{background:#F4433618;border-color:#F44336;animation:wshk .35s}
-@keyframes wshk{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.ing-btn.used{opacity:.28;cursor:not-allowed}
-.ing-e{font-size:1.5rem;display:block;margin-bottom:3px}
-.ing-n{font-size:.6rem;color:var(--cream);font-weight:600;line-height:1.2}
-.ing-btn.need-now{border-color:#FFD700;background:#FFD70012;animation:needPulse 1s infinite}
-@keyframes needPulse{0%,100%{box-shadow:0 0 0 0 #FFD70033}50%{box-shadow:0 0 0 5px #FFD70000}}
-.modal-hint{font-size:.72rem;color:#FF8C0077;text-align:center;padding:6px;background:#FF8C0008;border-radius:8px}
-
-/* ── RESULT ── */
-#result{align-items:center;justify-content:center;padding:16px;
-  background:radial-gradient(ellipse at 50% 30%,#ff8c0015,transparent 55%),var(--bg)}
-.res-card{background:linear-gradient(145deg,rgba(32,12,0,.97),rgba(16,5,0,.97));
-  border:1.5px solid #FF8C0028;border-radius:24px;padding:clamp(16px,4vw,32px);
-  text-align:center;max-width:380px;width:100%;
-  box-shadow:0 0 40px #ff8c0015;animation:ri .5s cubic-bezier(.34,1.56,.64,1)}
-@keyframes ri{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
-.res-e{font-size:clamp(2.8rem,9vw,5rem);display:block;margin-bottom:6px;
-  animation:bi .6s .2s both cubic-bezier(.34,1.56,.64,1)}
-@keyframes bi{from{transform:scale(0)}60%{transform:scale(1.2)}to{transform:scale(1)}}
-.res-t{font-family:var(--fh);font-size:clamp(1.4rem,4vw,1.9rem);color:#FFD700;font-weight:800}
-.res-s{font-size:1.5rem;margin:5px 0;letter-spacing:4px}
-.res-m{font-family:var(--fh);font-size:2rem;color:#FFB300;font-weight:800}
-.res-tg{font-size:.75rem;color:#FF8C0055;margin-bottom:10px}
-.res-st{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
-.rs{background:#FF8C0008;border:1px solid var(--border);border-radius:10px;padding:7px}
-.rsv{font-family:var(--fh);font-size:1.1rem;color:#FFB300;font-weight:700}
-.rsl{font-size:.62rem;color:#FF8C0044}
-.res-btns{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
-.btn-nx{background:linear-gradient(135deg,#E53935,#FF8C00);border:none;border-radius:26px;
-  padding:10px 22px;color:#fff;font-family:var(--fb);font-weight:800;font-size:.9rem;
-  cursor:pointer;transition:all .2s;box-shadow:0 3px 10px #ff8c0033}
-.btn-nx:hover{transform:scale(1.05)}
-.btn-hm{background:#FF8C0010;border:1px solid var(--border);color:var(--cream);
-  border-radius:26px;padding:10px 22px;font-family:var(--fb);font-weight:700;font-size:.9rem;
-  cursor:pointer;transition:all .2s}
-.btn-hm:hover{background:#FF8C0020}
-
-/* ── FX ── */
+/* FX */
 .ftxt{position:fixed;pointer-events:none;z-index:9999;font-family:var(--fh);
-  font-weight:800;font-size:1.1rem;animation:fu 1.1s ease-out forwards;white-space:nowrap}
-@keyframes fu{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-58px);opacity:0}}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) scale(0);
-  background:linear-gradient(135deg,#220c00,#140400);border:1px solid #FF8C0035;
+  font-weight:800;font-size:.94rem;animation:ftxtUp 1.1s ease-out forwards;white-space:nowrap}
+@keyframes ftxtUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-56px);opacity:0}}
+.toast{position:fixed;bottom:54px;left:50%;transform:translateX(-50%) scale(0);
+  background:linear-gradient(135deg,#12052c,#08021a);border:1px solid #9C27B044;
   border-radius:26px;padding:7px 18px;z-index:9998;font-family:var(--fh);
-  color:var(--cream);font-size:.92rem;font-weight:700;
-  box-shadow:0 3px 12px #00000055;pointer-events:none;
-  transition:transform .22s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:92vw;text-align:center}
+  color:var(--cream);font-size:.84rem;font-weight:700;box-shadow:0 3px 14px #00000066;
+  pointer-events:none;transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;max-width:88vw;text-align:center}
 .toast.show{transform:translateX(-50%) scale(1)}
-.tipbub{position:fixed;bottom:120px;left:50%;transform:translateX(-50%);
-  background:#FF8C000c;border:1px solid var(--border);backdrop-filter:blur(6px);
-  border-radius:12px;padding:6px 14px;color:var(--cream);font-size:.78rem;font-weight:700;
-  z-index:100;max-width:90vw;text-align:center;pointer-events:none;
-  animation:tipIn .3s ease-out}
-@keyframes tipIn{from{transform:translate(-50%,10px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
-.cf{position:fixed;pointer-events:none;z-index:9997;animation:cfall linear forwards}
-@keyframes cfall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.cf{position:fixed;pointer-events:none;z-index:9997;animation:cfFall linear forwards}
+@keyframes cfFall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* ─── RESULT ─── */
+#result{background:radial-gradient(ellipse at 50% 30%,#1c0640,#04020a);
+  align-items:center;justify-content:center;padding:14px}
+.res-card{background:linear-gradient(155deg,rgba(22,8,44,.97),rgba(8,3,18,.97));
+  border:1.5px solid #9C27B028;border-radius:22px;padding:clamp(14px,4vw,28px);
+  text-align:center;max-width:360px;width:100%;
+  box-shadow:0 0 44px #9C27B018;animation:resIn .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes resIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.res-e{font-size:clamp(2.5rem,8vw,4.2rem);display:block;margin-bottom:5px}
+.res-t{font-family:var(--fh);font-size:clamp(1.2rem,4vw,1.7rem);color:var(--gold);font-weight:800}
+.res-s{font-size:1.5rem;margin:5px 0;letter-spacing:5px}
+.res-m{font-family:var(--fh);font-size:1.9rem;color:#FFB300;font-weight:800}
+.res-tg{font-size:.68rem;color:#ffffff38;margin-bottom:8px}
+.res-st{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}
+.rs{background:#ffffff06;border:1px solid var(--border);border-radius:10px;padding:7px}
+.rsv{font-family:var(--fh);font-size:1rem;color:#FFB300;font-weight:700}
+.rsl{font-size:.55rem;color:#ffffff28}
+.res-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.btn-nx{background:linear-gradient(135deg,#7B1FA2,#E040FB);border:none;border-radius:24px;
+  padding:10px 22px;color:#fff;font-family:var(--fb);font-weight:800;font-size:.84rem;
+  cursor:pointer;box-shadow:0 2px 12px #9C27B050}
+.btn-hm{background:#ffffff09;border:1px solid var(--border);color:var(--cream);
+  border-radius:24px;padding:10px 22px;font-family:var(--fb);font-weight:700;font-size:.84rem;cursor:pointer}
 
 ::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-thumb{background:#FF8C0020;border-radius:2px}
-@media(max-width:380px){.kitchen{width:110px}.hand{width:70px}.tray{width:70px}}
-@media(min-width:650px){.tbl-grid{grid-template-columns:repeat(3,1fr)!important}}
-@media(min-width:900px){.tbl-grid{grid-template-columns:repeat(4,1fr)!important}}
+::-webkit-scrollbar-thumb{background:#ffffff12;border-radius:2px}
+@media(max-width:380px){.rpanel{width:105px}.rpanel-tab{left:105px}}
 </style>
 </head>
 <body>
 
 <!-- HOME -->
 <div class="screen active" id="home">
-  <div class="sign">
-    <span class="lanterns">🏮 🏮 🏮</span>
-    <div class="g-title">Nhà Hàng Phố</div>
-    <div class="g-sub">Restaurant Simulator</div>
+  <div class="home-hdr">
+    <span class="globe-spin">🌍</span>
+    <div class="g-title">World Kitchen 3D</div>
+    <div class="g-sub">Vòng Quanh Thế Giới · 100 Cấp Độ</div>
+  </div>
+  <div class="region-grid" id="regionGrid"></div>
+  <div class="home-tip">🗺️ Chọn vùng bản đồ để bắt đầu hành trình ẩm thực</div>
+</div>
+
+<!-- LEVEL SELECT -->
+<div class="screen" id="levelSelect">
+  <div class="ls-hdr">
+    <span class="ls-flag" id="lsFlag">🇻🇳</span>
+    <div class="ls-name" id="lsName">Việt Nam</div>
+    <div class="ls-desc" id="lsDesc">ẨM THỰC TRUYỀN THỐNG</div>
   </div>
   <div class="lv-grid" id="lvGrid"></div>
-  <div style="color:#FF8C0025;font-size:.66rem;text-align:center">
-    🥬 Chọn nguyên liệu · 🍳 Nấu · 🫱 Phục vụ · 💧 Rửa từng cái
-  </div>
+  <button class="back-btn" onclick="showScreen('home');renderHome()">← Bản đồ</button>
 </div>
 
 <!-- GAME -->
 <div class="screen" id="game">
-  <div class="hud">
-    <button class="hud-btn" onclick="confirmQuit()">✕</button>
-    <span class="hud-lv" id="hudLv">Màn 1</span>
-    <span class="hud-mo" id="hudMo">💰 0đ</span>
-    <span class="hud-tm" id="hudTm">⏱ 3:00</span>
-    <span class="hud-rp" id="hudRp">⭐⭐⭐⭐⭐</span>
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- HUD top -->
+  <div class="ghud">
+    <button class="ghud-btn" onclick="confirmQuit()">✕</button>
+    <span class="ghud-lv" id="hudLv">Màn 1</span>
+    <span class="ghud-mo" id="hudMo">💰0đ</span>
+    <span class="ghud-tm" id="hudTm">⏱3:00</span>
+    <span class="ghud-stars" id="hudStars">⭐⭐⭐⭐⭐</span>
   </div>
-  <div class="gbody">
-    <!-- KITCHEN -->
-    <div class="kitchen">
-      <div class="zh">🥬 Thực đơn</div>
-      <div class="rec-list" id="recList"></div>
-      <div class="zh">🍳 Đang nấu</div>
-      <div class="cslots" id="cslots"></div>
-    </div>
-    <!-- FLOOR -->
-    <div class="floor">
-      <div class="tbl-grid" id="tblGrid"></div>
-      <div class="qarea">
-        <div class="qhd">🚶 Hàng chờ: <span id="qcnt" style="color:#FFB300">0</span> khách</div>
-        <div class="qlist" id="qlist"></div>
-      </div>
-    </div>
+
+  <!-- Recipe panel left -->
+  <div class="rpanel" id="rPanel">
+    <div class="rpanel-hdr">🍳 Thực đơn</div>
+    <div class="rlist" id="rList"></div>
   </div>
-  <!-- BOTTOM -->
-  <div class="bbar">
-    <div class="sink">
-      <div class="sink-hd">💧 Bồn</div>
-      <div class="sink-pile" id="sinkPile"></div>
-      <div class="wash-ctrl">
-        <button class="wb" id="wbtn" onclick="toggleWash()">Rửa!</button>
-        <div class="wbar-w">
-          <div class="wbar"><div class="wbar-f" id="wfill" style="width:0%"></div></div>
-          <div class="wcnt" id="wcnt">0 cái</div>
-        </div>
-      </div>
-    </div>
-    <!-- TRAY: collected dirty dishes -->
-    <div class="tray" id="trayZone">
-      <div class="tray-hd">🧺 Khay</div>
-      <div class="tray-empty" id="trayEmpty">Trống</div>
-      <div id="trayDishes" style="display:none;flex-direction:column;align-items:center;gap:2px">
-        <div class="tray-dishes" id="trayPile"></div>
-        <div class="tray-cnt" id="trayCnt"></div>
-        <button class="tray-btn" onclick="sendTrayToSink()">→ Bồn</button>
-      </div>
-    </div>
-    <!-- HAND: carrying cooked dish -->
-    <div class="hand">
-      <div class="hand-hd">🖐 Tay</div>
-      <div class="hand-empty" id="handEmpty">Trống</div>
-      <div class="hand-dish" id="handDish" style="display:none">
-        <span class="hand-e" id="handE"></span>
-        <div class="hand-n" id="handN"></div>
-        <button class="drop-btn" onclick="dropDish()">✕</button>
-      </div>
-    </div>
+  <div class="rpanel-tab" id="rTab" onclick="toggleRPanel()">📖 MENU</div>
+
+  <!-- Orders panel right -->
+  <div class="opanel" id="oPanel">
+    <div class="opanel-hdr">📋 Đơn hàng</div>
+    <div class="olist" id="oList"></div>
+  </div>
+  <div class="opanel-tab" id="oTab" onclick="toggleOPanel()">📋 ĐƠN</div>
+
+  <!-- Ingredient collection UI (shown when at shelf) -->
+  <div class="ing-overlay" id="ingOverlay" style="display:none">
+    <div class="io-title" id="ioTitle">Lấy nguyên liệu</div>
+    <div class="io-ing-row" id="ioIngRow"></div>
+    <div class="io-hint">Nhấn từng nguyên liệu theo thứ tự</div>
+    <button class="io-cancel" onclick="cancelIngredientPick()">✕ Hủy</button>
+  </div>
+
+  <!-- Cook FAB -->
+  <button class="cook-fab hidden" id="cookBtn" onclick="startCookingFlow()">
+    <span class="cook-fab-icon">🥬</span>Lấy nguyên liệu
+  </button>
+
+  <!-- Status bottom -->
+  <div class="gstatus">
+    <span class="chef-carry-icon" id="chefCarryIcon"></span>
+    <span class="status-txt" id="statusTxt">Chọn món ăn → Bấm lấy nguyên liệu</span>
+    <span class="tap-hint" id="tapHint">Nhấn sàn để đi</span>
   </div>
 </div>
 
@@ -368,716 +308,1726 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--cream);fo
     <div class="res-tg" id="resTg"></div>
     <div class="res-st" id="resSt"></div>
     <div class="res-btns">
-      <button class="btn-nx" id="btnNx" onclick="nextLevel()">Màn tiếp →</button>
-      <button class="btn-hm" onclick="goHome()">🏠 Về nhà</button>
+      <button class="btn-nx" id="btnNx" onclick="btnNxClick()">Màn tiếp →</button>
+      <button class="btn-hm" onclick="goHome()">🗺️ Bản đồ</button>
     </div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════
-const INGS = {
-  ca_phe_hat: {e:'☕',n:'Cà phê hạt'},
-  nuoc_nong:  {e:'♨️',n:'Nước nóng'},
-  duong:      {e:'🍬',n:'Đường'},
-  sua_tuoi:   {e:'🥛',n:'Sữa tươi'},
-  banh_mi_o:  {e:'🥖',n:'Bánh mì'},
-  pate:       {e:'🧈',n:'Pa-tê'},
-  thit_nguoi: {e:'🥩',n:'Thịt nguội'},
-  rau_bm:     {e:'🥬',n:'Rau sống'},
-  ot:         {e:'🌶️',n:'Ớt'},
-  xuong_bo:   {e:'🦴',n:'Xương bò'},
-  banh_pho:   {e:'🍝',n:'Bánh phở'},
-  rau_thom:   {e:'🌿',n:'Rau thơm'},
-  hanh_tay:   {e:'🧅',n:'Hành tây'},
-  gung:       {e:'🫚',n:'Gừng'},
-  com_trang:  {e:'🍚',n:'Cơm trắng'},
-  suon_nuong: {e:'🥓',n:'Sườn nướng'},
-  trung_op:   {e:'🍳',n:'Trứng ốp la'},
-  mo_hanh:    {e:'🧄',n:'Mỡ hành'},
-  bun_tuoi:   {e:'🍜',n:'Bún tươi'},
-  sa:         {e:'🌾',n:'Sả'},
-  mam_ruoc:   {e:'🫙',n:'Mắm ruốc'},
-  thit_bo:    {e:'🥩',n:'Thịt bò'},
-  bot_gao:    {e:'🌾',n:'Bột gạo'},
-  nuoc_cot_dua:{e:'🥥',n:'Nước cốt dừa'},
-  tom:        {e:'🦐',n:'Tôm'},
-  gia_do:     {e:'🌱',n:'Giá đỗ'},
-  nghé:       {e:'🟡',n:'Nghệ'},
-  nuoc_lau:   {e:'🫕',n:'Nước lẩu'},
-  nam_huong:  {e:'🍄',n:'Nấm hương'},
-  rau_lau:    {e:'🥦',n:'Rau lẩu'},
-  thit_thi:   {e:'🥓',n:'Thịt thăn'},
-  banh_trang: {e:'⬜',n:'Bánh tráng'},
-  bun_goi:    {e:'🍝',n:'Bún sợi'},
-  rau_goi:    {e:'🥗',n:'Rau sống'},
-  // wrongs
-  ca:         {e:'🐟',n:'Cá (sai)',  wrong:1},
-  ketchup:    {e:'🍅',n:'Tương cà',  wrong:1},
-  giam:       {e:'🧴',n:'Giấm',      wrong:1},
-  muoi:       {e:'🧂',n:'Muối',      wrong:1},
-};
-
-const RECIPES = [
-  { id:'ca_phe',  name:'Cà Phê',    e:'☕', cookTime:2, price:15,
-    steps:[
-      {label:'Xay & pha cà phê', ings:['ca_phe_hat','nuoc_nong'], wrongs:['muoi','giam']},
-      {label:'Thêm đường & sữa',  ings:['duong','sua_tuoi'],       wrongs:['ketchup']},
-    ]},
-  { id:'banh_mi', name:'Bánh Mì',   e:'🥖', cookTime:3, price:25,
-    steps:[
-      {label:'Chuẩn bị bánh & pa-tê', ings:['banh_mi_o','pate'],       wrongs:['giam','muoi']},
-      {label:'Thêm nhân & rau',        ings:['thit_nguoi','rau_bm','ot'],wrongs:['ketchup']},
-    ]},
-  { id:'pho',     name:'Phở Bò',    e:'🍜', cookTime:6, price:40,
-    steps:[
-      {label:'Nấu nước dùng',    ings:['xuong_bo','gung','hanh_tay'],  wrongs:['giam','ca']},
-      {label:'Trần bánh & thịt', ings:['banh_pho','thit_bo'],           wrongs:['muoi']},
-      {label:'Trang trí rau',    ings:['rau_thom','ot'],                wrongs:['ketchup']},
-    ]},
-  { id:'com_tam', name:'Cơm Tấm',   e:'🍚', cookTime:5, price:35,
-    steps:[
-      {label:'Nấu cơm & sườn',  ings:['com_trang','suon_nuong'], wrongs:['giam']},
-      {label:'Thêm trứng & hành',ings:['trung_op','mo_hanh'],     wrongs:['muoi','ca']},
-    ]},
-  { id:'bun_bo',  name:'Bún Bò',    e:'🥣', cookTime:7, price:45,
-    steps:[
-      {label:'Nấu nước bún',  ings:['nuoc_lau','sa','mam_ruoc'],wrongs:['ketchup','giam']},
-      {label:'Thêm thịt & bún',ings:['thit_bo','bun_tuoi'],       wrongs:['ca']},
-      {label:'Rau & ớt',       ings:['rau_thom','ot'],             wrongs:['muoi']},
-    ]},
-  { id:'banh_xeo',name:'Bánh Xèo',  e:'🥞', cookTime:8, price:55,
-    steps:[
-      {label:'Pha bột bánh',   ings:['bot_gao','nuoc_cot_dua','nghé'],wrongs:['muoi','giam']},
-      {label:'Xào nhân',       ings:['tom','thit_nguoi'],              wrongs:['ca']},
-      {label:'Đổ bánh & giá',  ings:['gia_do','rau_bm'],               wrongs:['ketchup']},
-    ]},
-  { id:'lau',     name:'Lẩu',       e:'🫕', cookTime:12, price:90,
-    steps:[
-      {label:'Nấu nước lẩu',    ings:['nuoc_lau','sa','gung'],        wrongs:['giam']},
-      {label:'Thêm thịt & nấm', ings:['thit_bo','thit_thi','nam_huong'],wrongs:['muoi']},
-      {label:'Rau lẩu & ớt',    ings:['rau_lau','ot'],                 wrongs:['ketchup','ca']},
-    ]},
-  { id:'goi_cuon',name:'Gỏi Cuốn',  e:'🫔', cookTime:4, price:30,
-    steps:[
-      {label:'Chuẩn bị bánh tráng', ings:['banh_trang','bun_goi'],wrongs:['ca']},
-      {label:'Cuốn nhân tôm & rau', ings:['tom','rau_goi','rau_thom'],wrongs:['muoi','giam']},
-    ]},
+'use strict';
+// ══════════════════════════════════════════════════════════════
+// DATA — 10 REGIONS × 8 RECIPES EACH
+// ══════════════════════════════════════════════════════════════
+const REGIONS = [
+  { id:1, flag:'🇻🇳', name:'Việt Nam', desc:'ẨM THỰC VIỆT', themeColor:0xFF6644,
+    floorColor:'#2a0800', wallColor:0x1A0500,
+    recipes:[
+      {id:'ca_phe',   name:'Cà Phê',     e:'☕', t:3,  p:15, ings:[{e:'☕',n:'Cà Phê Hạt'},{e:'🥛',n:'Sữa Tươi'},{e:'🍬',n:'Đường'}]},
+      {id:'banh_mi',  name:'Bánh Mì',    e:'🥖', t:5,  p:25, ings:[{e:'🥖',n:'Bánh Mì'},{e:'🥩',n:'Thịt Nguội'},{e:'🥬',n:'Rau Sống'}]},
+      {id:'pho',      name:'Phở Bò',     e:'🍜', t:11, p:40, ings:[{e:'🦴',n:'Xương Bò'},{e:'🌿',n:'Rau Thơm'},{e:'🍜',n:'Bánh Phở'}]},
+      {id:'com_tam',  name:'Cơm Tấm',    e:'🍚', t:9,  p:35, ings:[{e:'🍚',n:'Cơm Trắng'},{e:'🥓',n:'Sườn Nướng'},{e:'🍳',n:'Trứng Ốp'}]},
+      {id:'bun_bo',   name:'Bún Bò',     e:'🥣', t:13, p:45, ings:[{e:'🥩',n:'Thịt Bò'},{e:'🌾',n:'Sả'},{e:'🥣',n:'Bún Tươi'}]},
+      {id:'banh_xeo', name:'Bánh Xèo',   e:'🥞', t:15, p:52, ings:[{e:'🌾',n:'Bột Gạo'},{e:'🦐',n:'Tôm'},{e:'🌱',n:'Giá Đỗ'}]},
+      {id:'lau',      name:'Lẩu',        e:'🫕', t:20, p:90, ings:[{e:'🫕',n:'Nước Lẩu'},{e:'🍄',n:'Nấm'},{e:'🥦',n:'Rau Lẩu'}]},
+      {id:'goi_cuon', name:'Gỏi Cuốn',   e:'🫔', t:7,  p:28, ings:[{e:'⬜',n:'Bánh Tráng'},{e:'🦐',n:'Tôm'},{e:'🌿',n:'Rau Thơm'}]},
+    ]
+  },
+  { id:2, flag:'🇯🇵', name:'Nhật Bản', desc:'TINH TẾ NHẬT BẢN', themeColor:0xFF2255,
+    floorColor:'#0a0015', wallColor:0x0D0020,
+    recipes:[
+      {id:'onigiri',  name:'Onigiri',     e:'🍙', t:4,  p:18, ings:[{e:'🍚',n:'Cơm'},{e:'🐟',n:'Cá Hồi'},{e:'🌿',n:'Rong Biển'}]},
+      {id:'miso',     name:'Miso Soup',   e:'🍵', t:5,  p:20, ings:[{e:'🫙',n:'Miso'},{e:'🟩',n:'Đậu Phụ'},{e:'🌿',n:'Hành Lá'}]},
+      {id:'sushi',    name:'Sushi',       e:'🍣', t:10, p:55, ings:[{e:'🍚',n:'Cơm Giấm'},{e:'🐟',n:'Cá Tươi'},{e:'🌿',n:'Rong Biển'}]},
+      {id:'ramen',    name:'Ramen',       e:'🍜', t:12, p:48, ings:[{e:'🍜',n:'Mì Ramen'},{e:'🥚',n:'Trứng Luộc'},{e:'🥓',n:'Thịt Xá Xíu'}]},
+      {id:'tempura',  name:'Tempura',     e:'🍤', t:10, p:42, ings:[{e:'🦐',n:'Tôm'},{e:'🌾',n:'Bột Chiên'},{e:'🥚',n:'Trứng'}]},
+      {id:'yakitori', name:'Yakitori',    e:'🍢', t:8,  p:35, ings:[{e:'🍗',n:'Gà'},{e:'🍯',n:'Nước Teriyaki'},{e:'🧄',n:'Tỏi'}]},
+      {id:'tonkatsu', name:'Tonkatsu',    e:'🥩', t:14, p:58, ings:[{e:'🥩',n:'Thịt Heo'},{e:'🌾',n:'Bột Chiên'},{e:'🥚',n:'Trứng'}]},
+      {id:'mochi',    name:'Mochi',       e:'🍡', t:7,  p:26, ings:[{e:'🌾',n:'Bột Nếp'},{e:'🍬',n:'Đường'},{e:'🍓',n:'Nhân Dâu'}]},
+    ]
+  },
+  { id:3, flag:'🇮🇹', name:'Ý (Italy)', desc:'ẨM THỰC Ý', themeColor:0x44FF44,
+    floorColor:'#001a00', wallColor:0x001800,
+    recipes:[
+      {id:'bruschetta',name:'Bruschetta', e:'🥖', t:4,  p:22, ings:[{e:'🥖',n:'Bánh Mì Nướng'},{e:'🍅',n:'Cà Chua'},{e:'🌿',n:'Húng Quế'}]},
+      {id:'pizza',     name:'Pizza',      e:'🍕', t:15, p:60, ings:[{e:'🌾',n:'Bột Mì'},{e:'🍅',n:'Sốt Cà'},{e:'🧀',n:'Phô Mai'}]},
+      {id:'pasta',     name:'Pasta',      e:'🍝', t:10, p:42, ings:[{e:'🍝',n:'Mì Pasta'},{e:'🍅',n:'Sốt Cà'},{e:'🌿',n:'Húng Quế'}]},
+      {id:'carbonara', name:'Carbonara',  e:'🍝', t:11, p:50, ings:[{e:'🍝',n:'Spaghetti'},{e:'🥚',n:'Trứng'},{e:'🥓',n:'Bacon'}]},
+      {id:'risotto',   name:'Risotto',    e:'🍚', t:13, p:52, ings:[{e:'🍚',n:'Gạo Arborio'},{e:'🧀',n:'Parmesan'},{e:'🍄',n:'Nấm'}]},
+      {id:'tiramisu',  name:'Tiramisu',   e:'🍰', t:8,  p:38, ings:[{e:'☕',n:'Espresso'},{e:'🧀',n:'Mascarpone'},{e:'🍰',n:'Bánh Ladyfinger'}]},
+      {id:'gelato',    name:'Gelato',     e:'🍦', t:6,  p:28, ings:[{e:'🥛',n:'Sữa'},{e:'🍬',n:'Đường'},{e:'🍓',n:'Trái Cây'}]},
+      {id:'arancini',  name:'Arancini',   e:'🟠', t:9,  p:35, ings:[{e:'🍚',n:'Cơm'},{e:'🧀',n:'Phô Mai'},{e:'🌾',n:'Bột Chiên'}]},
+    ]
+  },
+  { id:4, flag:'🇲🇽', name:'Mexico', desc:'SPICY MEXICO', themeColor:0xFF7700,
+    floorColor:'#1a0a00', wallColor:0x1A0800,
+    recipes:[
+      {id:'guacamole',  name:'Guacamole',  e:'🥑', t:4, p:20, ings:[{e:'🥑',n:'Bơ'},{e:'🌶️',n:'Ớt Jalapeño'},{e:'🧅',n:'Hành Tím'}]},
+      {id:'tacos',      name:'Tacos',       e:'🌮', t:8, p:35, ings:[{e:'🌮',n:'Vỏ Taco'},{e:'🥩',n:'Thịt Bò'},{e:'🌶️',n:'Salsa'}]},
+      {id:'burrito',    name:'Burrito',     e:'🌯', t:10,p:40, ings:[{e:'🌯',n:'Vỏ Burrito'},{e:'🍚',n:'Cơm'},{e:'🥩',n:'Thịt'}]},
+      {id:'nachos',     name:'Nachos',      e:'🫓', t:7, p:32, ings:[{e:'🫓',n:'Chips'},{e:'🧀',n:'Phô Mai'},{e:'🌶️',n:'Jalapeño'}]},
+      {id:'quesadilla', name:'Quesadilla',  e:'🫔', t:9, p:35, ings:[{e:'🫔',n:'Tortilla'},{e:'🧀',n:'Phô Mai'},{e:'🌶️',n:'Ớt'}]},
+      {id:'enchilada',  name:'Enchilada',   e:'🥘', t:12,p:45, ings:[{e:'🌯',n:'Tortilla'},{e:'🥩',n:'Thịt'},{e:'🍅',n:'Sốt Đỏ'}]},
+      {id:'churros',    name:'Churros',     e:'🍩', t:8, p:28, ings:[{e:'🌾',n:'Bột'},{e:'🍬',n:'Đường Quế'},{e:'🥚',n:'Trứng'}]},
+      {id:'pozole',     name:'Pozole',      e:'🍲', t:15,p:55, ings:[{e:'🌽',n:'Ngô'},{e:'🥩',n:'Thịt Heo'},{e:'🌶️',n:'Ớt Ancho'}]},
+    ]
+  },
+  { id:5, flag:'🇮🇳', name:'Ấn Độ', desc:'EXOTIC INDIA', themeColor:0xFF9900,
+    floorColor:'#1a0900', wallColor:0x180800,
+    recipes:[
+      {id:'chai',       name:'Chai Tea',    e:'☕', t:4,  p:16, ings:[{e:'🍵',n:'Trà Đen'},{e:'🥛',n:'Sữa'},{e:'🫚',n:'Gia Vị'}]},
+      {id:'samosa',     name:'Samosa',      e:'🥟', t:9,  p:28, ings:[{e:'🌾',n:'Bột Mì'},{e:'🥔',n:'Khoai Tây'},{e:'🌶️',n:'Cà Ri'}]},
+      {id:'naan',       name:'Naan Bread',  e:'🫓', t:7,  p:22, ings:[{e:'🌾',n:'Bột'},{e:'🧈',n:'Bơ'},{e:'🧄',n:'Tỏi'}]},
+      {id:'curry',      name:'Chicken Curry',e:'🍛',t:15, p:52, ings:[{e:'🍗',n:'Gà'},{e:'🌶️',n:'Cà Ri'},{e:'🥥',n:'Nước Cốt Dừa'}]},
+      {id:'biryani',    name:'Biryani',     e:'🍚', t:17, p:58, ings:[{e:'🍚',n:'Gạo Basmati'},{e:'🥩',n:'Thịt Cừu'},{e:'🫚',n:'Gia Vị Garam'}]},
+      {id:'tikka',      name:'Tikka Masala',e:'🍗', t:16, p:55, ings:[{e:'🍗',n:'Gà'},{e:'🌶️',n:'Masala'},{e:'🥛',n:'Sữa Chua'}]},
+      {id:'dosa',       name:'Masala Dosa', e:'🫓', t:10, p:32, ings:[{e:'🌾',n:'Bột Gạo'},{e:'🥔',n:'Khoai Tây'},{e:'🫚',n:'Hạt Mù Tạt'}]},
+      {id:'lassi',      name:'Mango Lassi', e:'🥭', t:4,  p:18, ings:[{e:'🥭',n:'Xoài'},{e:'🥛',n:'Sữa Chua'},{e:'🍬',n:'Đường'}]},
+    ]
+  },
+  { id:6, flag:'🇫🇷', name:'Pháp', desc:'HAUTE CUISINE', themeColor:0x4488FF,
+    floorColor:'#000518', wallColor:0x000818,
+    recipes:[
+      {id:'croissant',  name:'Croissant',   e:'🥐', t:8,  p:24, ings:[{e:'🌾',n:'Bột Mì'},{e:'🧈',n:'Bơ Tươi'},{e:'🥛',n:'Sữa'}]},
+      {id:'crepe',      name:'Crêpe Suzette',e:'🥞',t:6,  p:26, ings:[{e:'🥞',n:'Bột Nhào'},{e:'🥚',n:'Trứng'},{e:'🍊',n:'Cam'}]},
+      {id:'baguette',   name:'Baguette',    e:'🥖', t:10, p:20, ings:[{e:'🌾',n:'Bột Cứng'},{e:'💧',n:'Nước'},{e:'🧂',n:'Muối'}]},
+      {id:'soupe_oig',  name:'Soupe Oignon',e:'🧅', t:14, p:44, ings:[{e:'🧅',n:'Hành Tây'},{e:'🥖',n:'Bánh Nướng'},{e:'🧀',n:'Gruyère'}]},
+      {id:'quiche',     name:'Quiche',      e:'🥧', t:15, p:50, ings:[{e:'🥧',n:'Vỏ Bánh'},{e:'🥚',n:'Trứng'},{e:'🧀',n:'Phô Mai'}]},
+      {id:'macaron',    name:'Macaron',     e:'🍪', t:12, p:38, ings:[{e:'🌰',n:'Bột Hạnh Nhân'},{e:'🥚',n:'Lòng Trắng'},{e:'🍬',n:'Đường Bột'}]},
+      {id:'bouillabaisse',name:'Bouillabaisse',e:'🍲',t:18,p:70,ings:[{e:'🐟',n:'Cá Biển'},{e:'🍅',n:'Cà Chua'},{e:'🌿',n:'Saffron'}]},
+      {id:'ratatouille',name:'Ratatouille', e:'🍆', t:13, p:48, ings:[{e:'🍆',n:'Cà Tím'},{e:'🫑',n:'Ớt Ngọt'},{e:'🍅',n:'Cà Chua'}]},
+    ]
+  },
+  { id:7, flag:'🇹🇭', name:'Thái Lan', desc:'STREET FOOD THAI', themeColor:0xFF2244,
+    floorColor:'#1a0010', wallColor:0x190010,
+    recipes:[
+      {id:'pad_thai',   name:'Pad Thai',    e:'🍜', t:10, p:40, ings:[{e:'🍜',n:'Mì Gạo'},{e:'🥚',n:'Trứng'},{e:'🥜',n:'Đậu Phộng'}]},
+      {id:'tom_yum',    name:'Tom Yum',     e:'🍲', t:14, p:48, ings:[{e:'🦐',n:'Tôm'},{e:'🌶️',n:'Ớt'},{e:'🌾',n:'Sả'}]},
+      {id:'green_curry',name:'Green Curry', e:'🥘', t:15, p:50, ings:[{e:'🥥',n:'Nước Cốt Dừa'},{e:'🌿',n:'Cà Ri Xanh'},{e:'🫑',n:'Ớt Xanh'}]},
+      {id:'satay',      name:'Satay',       e:'🍢', t:9,  p:32, ings:[{e:'🍗',n:'Gà'},{e:'🥜',n:'Nước Sốt Đậu'},{e:'🌾',n:'Sả'}]},
+      {id:'mango_rice', name:'Mango Sticky',e:'🥭', t:8,  p:30, ings:[{e:'🥭',n:'Xoài'},{e:'🍚',n:'Gạo Nếp'},{e:'🥥',n:'Nước Cốt Dừa'}]},
+      {id:'som_tum',    name:'Som Tum',     e:'🥗', t:6,  p:26, ings:[{e:'🫛',n:'Đu Đủ Xanh'},{e:'🥜',n:'Đậu Phộng'},{e:'🌶️',n:'Ớt'}]},
+      {id:'massaman',   name:'Massaman',    e:'🍛', t:16, p:56, ings:[{e:'🥩',n:'Thịt Bò'},{e:'🥔',n:'Khoai Tây'},{e:'🥥',n:'Dừa'}]},
+      {id:'khao_pad',   name:'Khao Pad',    e:'🍳', t:8,  p:32, ings:[{e:'🍚',n:'Cơm'},{e:'🥚',n:'Trứng'},{e:'🌿',n:'Hành Lá'}]},
+    ]
+  },
+  { id:8, flag:'🇺🇸', name:'Mỹ (USA)', desc:'AMERICAN CLASSICS', themeColor:0x2255FF,
+    floorColor:'#00051a', wallColor:0x000820,
+    recipes:[
+      {id:'hotdog',     name:'Hot Dog',     e:'🌭', t:4,  p:18, ings:[{e:'🌭',n:'Xúc Xích'},{e:'🌾',n:'Bánh Mì'},{e:'🍅',n:'Ketchup'}]},
+      {id:'burger',     name:'Burger',      e:'🍔', t:9,  p:42, ings:[{e:'🥩',n:'Thịt Băm'},{e:'🌾',n:'Bánh Bao'},{e:'🥬',n:'Rau Salad'}]},
+      {id:'pancakes',   name:'Pancakes',    e:'🥞', t:8,  p:28, ings:[{e:'🥞',n:'Bột Pancake'},{e:'🥛',n:'Sữa'},{e:'🍯',n:'Mật Ong'}]},
+      {id:'bbq_ribs',   name:'BBQ Ribs',    e:'🍖', t:20, p:75, ings:[{e:'🍖',n:'Sườn Heo'},{e:'🍯',n:'Sốt BBQ'},{e:'🔥',n:'Than Củi'}]},
+      {id:'mac_cheese', name:'Mac & Cheese',e:'🧀', t:10, p:36, ings:[{e:'🍝',n:'Mì Macaroni'},{e:'🧀',n:'Cheddar'},{e:'🥛',n:'Sữa'}]},
+      {id:'cheesecake', name:'Cheesecake',  e:'🍰', t:14, p:42, ings:[{e:'🧀',n:'Cream Cheese'},{e:'🍬',n:'Đường'},{e:'🥚',n:'Trứng'}]},
+      {id:'clam_chowder',name:'Clam Chowder',e:'🍲',t:15,p:52,ings:[{e:'🦪',n:'Nghêu'},{e:'🥔',n:'Khoai Tây'},{e:'🥛',n:'Kem'}]},
+      {id:'lobster_roll',name:'Lobster Roll',e:'🦞',t:18,p:80,ings:[{e:'🦞',n:'Tôm Hùm'},{e:'🌾',n:'Bánh Hot Dog'},{e:'🧈',n:'Bơ'}]},
+    ]
+  },
+  { id:9, flag:'🇨🇳', name:'Trung Quốc', desc:'ẨM THỰC TRUNG HOA', themeColor:0xFF4400,
+    floorColor:'#1a0600', wallColor:0x180500,
+    recipes:[
+      {id:'dimsum',     name:'Dim Sum',     e:'🥟', t:8,  p:32, ings:[{e:'🌾',n:'Bột Gạo'},{e:'🥩',n:'Thịt Heo'},{e:'🌿',n:'Hành Lá'}]},
+      {id:'fried_rice', name:'Cơm Chiên',   e:'🍚', t:8,  p:30, ings:[{e:'🍚',n:'Cơm'},{e:'🥚',n:'Trứng'},{e:'🌿',n:'Hành Lá'}]},
+      {id:'dumplings',  name:'Há Cảo',      e:'🥢', t:12, p:40, ings:[{e:'🌾',n:'Bột Mì'},{e:'🦐',n:'Tôm'},{e:'🥬',n:'Cải'}]},
+      {id:'hot_pot_cn', name:'Lẩu TQ',      e:'🫕', t:18, p:80, ings:[{e:'🫕',n:'Nước Lẩu'},{e:'🥩',n:'Thịt'},{e:'🍄',n:'Nấm'}]},
+      {id:'peking_duck',name:'Vịt Quay',    e:'🦆', t:22, p:88, ings:[{e:'🦆',n:'Vịt'},{e:'🫓',n:'Bánh Mỏng'},{e:'🌿',n:'Hành'}]},
+      {id:'baozi',      name:'Bánh Bao',    e:'🥙', t:9,  p:26, ings:[{e:'🌾',n:'Bột'},{e:'🥩',n:'Nhân Thịt'},{e:'🍬',n:'Đường'}]},
+      {id:'kung_pao',   name:'Kung Pao',    e:'🍗', t:12, p:45, ings:[{e:'🍗',n:'Gà'},{e:'🌶️',n:'Ớt Khô'},{e:'🥜',n:'Đậu Phộng'}]},
+      {id:'xiaolongbao',name:'Tiểu Long Bao',e:'🥟',t:13,p:48, ings:[{e:'🌾',n:'Bột Mì'},{e:'🥩',n:'Nhân Thịt'},{e:'🍲',n:'Nước Dùng'}]},
+    ]
+  },
+  { id:10, flag:'🇰🇷', name:'Hàn Quốc', desc:'K-FOOD KOREA', themeColor:0xFF1155,
+    floorColor:'#0a001a', wallColor:0x0a0018,
+    recipes:[
+      {id:'bibimbap',   name:'Bibimbap',     e:'🍚', t:11, p:44, ings:[{e:'🍚',n:'Cơm'},{e:'🥚',n:'Trứng Sốt'},{e:'🌶️',n:'Gochujang'}]},
+      {id:'kimchi_jj',  name:'Kimchi Jjigae',e:'🥘', t:14, p:48, ings:[{e:'🥘',n:'Kimchi'},{e:'🥩',n:'Thịt Heo'},{e:'🟩',n:'Đậu Phụ'}]},
+      {id:'bulgogi',    name:'Bulgogi',      e:'🥩', t:12, p:52, ings:[{e:'🥩',n:'Thịt Bò'},{e:'🍯',n:'Sốt Bulgogi'},{e:'🧄',n:'Tỏi'}]},
+      {id:'tteokbokki', name:'Tteokbokki',   e:'🍢', t:9,  p:32, ings:[{e:'🍢',n:'Bánh Gạo'},{e:'🌶️',n:'Sốt Cay'},{e:'🧀',n:'Phô Mai'}]},
+      {id:'korean_fc',  name:'Korean Fried Chicken',e:'🍗',t:13,p:50,ings:[{e:'🍗',n:'Gà'},{e:'🌶️',n:'Sốt Cay'},{e:'🍯',n:'Mật Ong'}]},
+      {id:'bingsu',     name:'Bingsu',       e:'🍧', t:5,  p:24, ings:[{e:'🧊',n:'Đá Bào'},{e:'🍓',n:'Dâu Tây'},{e:'🍯',n:'Siro'}]},
+      {id:'samgyeopsal',name:'Samgyeopsal',  e:'🥓', t:10, p:46, ings:[{e:'🥓',n:'Ba Chỉ Heo'},{e:'🌿',n:'Rau Cuốn'},{e:'🌶️',n:'Sốt Ssamjang'}]},
+      {id:'doenjang_jj',name:'Doenjang Jjigae',e:'🍵',t:12,p:42,ings:[{e:'🫙',n:'Tương Đen'},{e:'🟩',n:'Đậu Phụ'},{e:'🥬',n:'Rau'}]},
+    ]
+  },
 ];
 
-const LEVELS = [
-  {id:1, name:'Quán Vỉa Hè',   e:'🏠', desc:'3 bàn · Bắt đầu nhẹ',
-   tables:3, slots:2, time:150, target:250,  spawn:9,  pat:5.5, recs:[0,1,2]},
-  {id:2, name:'Quán Bình Dân', e:'🍜', desc:'5 bàn · Đông khách hơn',
-   tables:5, slots:3, time:180, target:650,  spawn:6.5,pat:8,   recs:[0,1,2,3,4]},
-  {id:3, name:'Nhà Hàng',      e:'🏪', desc:'7 bàn · Nhịp nhanh',
-   tables:7, slots:3, time:210, target:1400, spawn:4.5,pat:10,  recs:[0,1,2,3,4,5,6]},
-  {id:4, name:'Nhà Hàng 5⭐',  e:'✨', desc:'8 bàn VIP · Pro',
-   tables:8, slots:4, time:200, target:2500, spawn:3,  pat:13,  recs:[0,1,2,3,4,5,6,7]},
-];
+// Build 10 levels per region
+REGIONS.forEach(r=>{
+  r.levels = Array.from({length:10},(_,i)=>{
+    const n=i+1;
+    return {
+      id:n, regionId:r.id,
+      tables: Math.min(4+Math.floor(n/2), 8),
+      time: 170+n*14,
+      target: Math.round(220*r.id*(1+i*0.38)),
+      spawn: Math.max(2.5, 9-n*0.65),
+      foodPatRate: 2.8+i*0.2,    // patience drain %/s while waiting for food
+      queuePatRate: 8+i*0.4,     // patience drain %/s while waiting in queue
+      recipeCount: Math.max(3, Math.min(2+Math.floor(n/1.5), r.recipes.length)),
+      stoves: n>=6?3:2,
+    };
+  });
+});
 
-const CUSTS = [
-  {n:'Anh Tuấn', av:'👨', tip:1.0, eat:6},
-  {n:'Chị Lan',  av:'👩', tip:1.2, eat:5},
-  {n:'Bà Hoa',   av:'👵', tip:0.8, eat:8},
-  {n:'Ông Nam',  av:'👴', tip:0.9, eat:9},
-  {n:'Bạn Minh', av:'🧑', tip:1.1, eat:5},
-  {n:'Cô Hà',    av:'🧕', tip:1.3, eat:6},
-  {n:'Khoa VIP', av:'👱', tip:1.7, eat:4, vip:1},
-  {n:'Nhóm Bạn', av:'👨‍👩‍👧',tip:1.9,eat:8, vip:1},
-  {n:'Du Khách', av:'🧳', tip:2.1, eat:5, vip:1},
-];
+// ══════════════════════════════════════════════════════════════
+// SAVE
+// ══════════════════════════════════════════════════════════════
+let scores = {};
+try{ scores=JSON.parse(localStorage.getItem('wk3d_v3')||'{}'); }catch(e){}
+function save(){ try{ localStorage.setItem('wk3d_v3',JSON.stringify(scores)); }catch(e){} }
 
-// ══════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// GLOBALS
+// ══════════════════════════════════════════════════════════════
+let renderer=null, scene=null, camera=null, clock=null;
+let chefGroup=null;
+let stationData=[];   // {type,id,pos:{x,z},mesh,hitRadius}
+let tableMeshData=[];  // {group,statusBall,patBarSprite,idx,pos}
+let custMeshMap={};   // custId → {group,patBarSprite,patBarCanvas,patBarCtx}
+let floorMesh=null;
+let stoveLights=[];
+let stoveRings=[];
+let stoveEmojiSprites=[];
+let emojiCache={};
+let gameRAF=null;
+
+// Collision obstacles (AABB on XZ, half-extents)
+let obstacles=[];
+
+const CHEF_SPEED=4.5;
+const CUST_SPEED=3.0;
+const CUST_COLORS=[0xE91E63,0x2196F3,0xFF9800,0x4CAF50,0x9C27B0,0x00BCD4,0xFF5722,0xF06292];
+const CUST_SKINS=[0xFFD08A,0xC68642,0xF5CBA7,0xD4A574,0xFFE0BD,0xE8BE96];
+
+// ══════════════════════════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════
-let G = null, LV = null, gameTimer = null;
-let scores = JSON.parse(localStorage.getItem('nhph3')||'{}');
-// cooking modal state
-let cookingModal = null; // {slotId, recipe, stepIdx, stepDone, addedIngs}
+// ══════════════════════════════════════════════════════════════
+let G=null, LV=null, RG=null;
 
-// ══════════════════════════════════════════
-// HOME
-// ══════════════════════════════════════════
-function renderHome() {
-  document.getElementById('lvGrid').innerHTML = LEVELS.map(lv => {
-    const sc = scores[lv.id]||0;
-    const prev = lv.id>1 ? LEVELS[lv.id-2] : null;
-    const locked = prev && !(scores[prev.id] >= prev.target);
-    const stars = sc>=lv.target*1.4?'⭐⭐⭐':sc>=lv.target?'⭐⭐':sc>0?'⭐':'☆☆☆';
-    return `<div class="lv-card${locked?' locked':''}" onclick="${locked?'tip2(\'🔒 Hoàn thành màn trước!\')':'startGame('+lv.id+')'}">
-      <span class="lv-e">${lv.e}</span>
-      <div class="lv-nm">Màn ${lv.id}: ${lv.name}</div>
-      <div class="lv-ds">${lv.desc}</div>
-      <div class="lv-tg">🎯 ${lv.target.toLocaleString()}đ</div>
-      <div class="lv-st">${stars}</div>
-      ${locked?'<div class="lock-ov">🔒</div>':''}
+function mkState(){
+  return {
+    money:0, time:LV.time, rep:5,
+    tables: Array.from({length:LV.tables},(_,i)=>({
+      id:i, state:'empty', cust:null, order:null,
+      patience:100, eatTimer:0, payReady:false,
+    })),
+    stoves: Array.from({length:LV.stoves||2},(_,i)=>({
+      id:i, busy:false, prog:0, cookTime:0, recipe:null, done:false
+    })),
+    queue:[], customers:[],
+    chef:{
+      pos:{x:0,z:-3}, target:null, afterArrive:null,
+      state:'idle',   // idle|walk|walkToShelf|atShelf|hasIngredients|carrying
+      carry:null,     // {recipe} when carrying dish
+      collectStep:0,  // how many ingredients collected so far
+      collectTarget:null, // which recipe we're collecting for
+      collectIngPoses:[], // 3D positions of ingredient spots
+      skipCol:false,  // skip obstacle collision (for scripted walks)
+    },
+    selectedRecipe:null,
+    spawnTimer:2,
+    stats:{served:0,seated:0,tip:0,angry:0},
+    running:true,
+  };
+}
+
+// ══════════════════════════════════════════════════════════════
+// THREE.JS INIT
+// ══════════════════════════════════════════════════════════════
+function initThree(){
+  const canvas=document.getElementById('gameCanvas');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.1;
+  scene=new THREE.Scene();
+  clock=new THREE.Clock();
+  camera=new THREE.PerspectiveCamera(50,1,0.1,80);
+  camera.position.set(0,17,-12);
+  camera.lookAt(0,0,2);
+  window.addEventListener('resize',onResize);
+  onResize();
+}
+
+function onResize(){
+  const w=innerWidth,h=innerHeight;
+  renderer.setSize(w,h);
+  camera.aspect=w/h; camera.updateProjectionMatrix();
+}
+
+// ══════════════════════════════════════════════════════════════
+// BUILD SCENE
+// ══════════════════════════════════════════════════════════════
+function buildScene(){
+  while(scene.children.length) scene.remove(scene.children[0]);
+  stationData=[]; tableMeshData=[]; custMeshMap={}; stoveLights=[];
+  stoveRings=[]; stoveEmojiSprites=[]; obstacles=[];
+
+  const rc=RG.themeColor;
+
+  // ── Lighting ──
+  scene.add(new THREE.AmbientLight(0xFFEEDD,0.45));
+  const sun=new THREE.DirectionalLight(0xFFEED0,1.2);
+  sun.position.set(4,14,-7); sun.castShadow=true;
+  sun.shadow.mapSize.set(2048,2048);
+  sun.shadow.camera.left=-11; sun.shadow.camera.right=11;
+  sun.shadow.camera.top=11; sun.shadow.camera.bottom=-11;
+  sun.shadow.camera.far=40;
+  scene.add(sun);
+  const kitLight=new THREE.PointLight(rc,0.7,20);
+  kitLight.position.set(0,6,5); scene.add(kitLight);
+  const backLight=new THREE.PointLight(0x4466FF,0.25,18);
+  backLight.position.set(-4,4,-2); scene.add(backLight);
+  scene.fog=new THREE.FogExp2(0x04020a,0.022);
+
+  // ── Floor ──
+  const floorTex=makeFloorTex(RG.floorColor||'#0a0300');
+  const floorMat=new THREE.MeshLambertMaterial({map:floorTex});
+  const floorMesh3=new THREE.Mesh(new THREE.PlaneGeometry(22,22),floorMat);
+  floorMesh3.rotation.x=-Math.PI/2; floorMesh3.receiveShadow=true;
+  floorMesh3.userData={type:'floor'}; scene.add(floorMesh3);
+  // Invisible raycast floor
+  floorMesh=new THREE.Mesh(
+    new THREE.PlaneGeometry(22,22),
+    new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide})
+  );
+  floorMesh.rotation.x=-Math.PI/2; floorMesh.position.y=0.02;
+  floorMesh.userData={type:'floor'}; scene.add(floorMesh);
+
+  // ── Walls ──
+  buildWalls();
+
+  // ── Kitchen divider ──
+  buildCounter();
+
+  // ── Ingredient shelf ──
+  buildShelf();
+
+  // ── Stoves ──
+  buildStoves();
+
+  // ── Tables & chairs ──
+  buildTables();
+
+  // ── Entrance ──
+  buildEntrance();
+
+  // ── Chef ──
+  buildChef();
+}
+
+function makeFloorTex(hex){
+  const c=document.createElement('canvas'); c.width=c.height=256;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle=hex; ctx.fillRect(0,0,256,256);
+  // tile pattern
+  ctx.fillStyle='rgba(255,255,255,0.035)';
+  for(let i=0;i<8;i++) for(let j=0;j<8;j++)
+    if((i+j)%2===0) ctx.fillRect(i*32,j*32,32,32);
+  // grout lines
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(let i=0;i<=8;i++){
+    ctx.beginPath(); ctx.moveTo(i*32,0); ctx.lineTo(i*32,256); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,i*32); ctx.lineTo(256,i*32); ctx.stroke();
+  }
+  const t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(5,5); return t;
+}
+
+function buildWalls(){
+  const wc=RG.wallColor||0x0d0520;
+  const wallMat=new THREE.MeshPhongMaterial({color:wc,shininess:10});
+  // Back wall with baseboard detail
+  const bwall=new THREE.Mesh(new THREE.BoxGeometry(22,5.5,0.35),wallMat);
+  bwall.position.set(0,2.75,8); scene.add(bwall);
+  // Baseboard
+  const base=new THREE.Mesh(new THREE.BoxGeometry(22,0.25,0.4),
+    new THREE.MeshPhongMaterial({color:0x3d2400,shininess:40}));
+  base.position.set(0,0.125,7.82); scene.add(base);
+  // Side walls
+  const lwl=new THREE.Mesh(new THREE.BoxGeometry(0.35,5.5,22),wallMat);
+  lwl.position.set(-11,2.75,0); scene.add(lwl);
+  const rwl=new THREE.Mesh(new THREE.BoxGeometry(0.35,5.5,22),wallMat);
+  rwl.position.set(11,2.75,0); scene.add(rwl);
+  // Ceiling partial
+  const ceil=new THREE.Mesh(new THREE.PlaneGeometry(22,22),
+    new THREE.MeshLambertMaterial({color:wc,side:THREE.DoubleSide}));
+  ceil.rotation.x=Math.PI/2; ceil.position.y=5.5; scene.add(ceil);
+}
+
+function buildCounter(){
+  const g=new THREE.Group();
+  // Base
+  const baseMat=new THREE.MeshPhongMaterial({color:0x5D3A1A,shininess:30});
+  const base=new THREE.Mesh(new THREE.BoxGeometry(19,0.9,0.6),baseMat);
+  base.position.y=0.45; base.castShadow=true; g.add(base);
+  // Top edge marble
+  const topMat=new THREE.MeshPhongMaterial({color:0xE0C8A0,shininess:80});
+  const top=new THREE.Mesh(new THREE.BoxGeometry(19.1,0.08,0.72),topMat);
+  top.position.y=0.94; g.add(top);
+  g.position.set(0,0,3.4);
+  scene.add(g);
+  // Obstacle for counter
+  obstacles.push({cx:0,cz:3.4,hw:9.5,hd:0.4});
+}
+
+function buildShelf(){
+  const g=new THREE.Group();
+  const woodMat=new THREE.MeshPhongMaterial({color:0x5D3A1A,shininess:30});
+  const darkMat=new THREE.MeshPhongMaterial({color:0x3D2409,shininess:10});
+  // Back panel
+  const back=new THREE.Mesh(new THREE.BoxGeometry(9,2.2,0.2),darkMat);
+  back.position.y=1.1; g.add(back);
+  // Shelves
+  [-0.2,0.7,1.4].forEach(y=>{
+    const shelf=new THREE.Mesh(new THREE.BoxGeometry(9.1,0.1,0.85),woodMat);
+    shelf.position.y=y+0.55; g.add(shelf);
+  });
+  // Side panels
+  [-4.45,4.45].forEach(x=>{
+    const side=new THREE.Mesh(new THREE.BoxGeometry(0.12,2.2,0.85),woodMat);
+    side.position.set(x,1.1,0); g.add(side);
+  });
+  g.position.set(0,0,6.8);
+  g.castShadow=true; g.receiveShadow=true;
+  scene.add(g);
+
+  // Ingredient spots on shelf (3 spots, equally spaced)
+  const ingSlots=RG.recipes.slice(0,LV.recipeCount);
+  const usedIngs={};
+  ingSlots.forEach(r=>r.ings.forEach(ing=>{ usedIngs[ing.e]=ing; }));
+  const uniqueIngs=Object.values(usedIngs).slice(0,6);
+  const slotXPositions=[-3.5,-1.75,0,1.75,3.5,0];
+  uniqueIngs.forEach((ing,i)=>{
+    const sx=slotXPositions[i]||0;
+    const sy=6.8;
+    // Small container/bowl on shelf
+    const potMat=new THREE.MeshPhongMaterial({color:0x8B5E3C,shininess:40});
+    const pot=new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.18,0.28,10),potMat);
+    pot.position.set(sx,1.35,sy);
+    pot.castShadow=true; scene.add(pot);
+    // Emoji label on container
+    const sprite=makeEmojiSprite(ing.e,0.5);
+    sprite.position.set(sx,1.75,sy);
+    scene.add(sprite);
+    // Hitbox for ingredient spot
+    const hm=new THREE.Mesh(
+      new THREE.BoxGeometry(0.7,0.8,0.6),
+      new THREE.MeshBasicMaterial({visible:false})
+    );
+    hm.position.set(sx,1.2,sy);
+    hm.userData={type:'ingspot',ingIdx:i,ing};
+    scene.add(hm);
+    stationData.push({type:'ingspot',id:i,pos:{x:sx,z:sy-1.1},mesh:hm,ing});
+  });
+
+  // Invisible shelf hitbox for walking into
+  obstacles.push({cx:0,cz:6.8,hw:4.5,hd:0.5});
+  // Add shelf click area
+  const shelfHit=new THREE.Mesh(
+    new THREE.BoxGeometry(9,2.5,1),
+    new THREE.MeshBasicMaterial({visible:false})
+  );
+  shelfHit.position.set(0,1,6.6);
+  shelfHit.userData={type:'shelf',id:0};
+  scene.add(shelfHit);
+  stationData.push({type:'shelf',id:0,pos:{x:0,z:5.8},mesh:shelfHit});
+}
+
+function buildStoves(){
+  const n=LV.stoves||2;
+  const xs=n===2?[-3,3]:[-4,0,4];
+  xs.forEach((x,i)=>{
+    const g=new THREE.Group();
+    // Body
+    const bodyMat=new THREE.MeshPhongMaterial({color:0x1a1a1a,shininess:60});
+    const body=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.1,1.4),bodyMat);
+    body.position.y=0.55; body.castShadow=true; g.add(body);
+    // Top plate
+    const topMat=new THREE.MeshPhongMaterial({color:0x2a2a2a,shininess:90});
+    const topPlate=new THREE.Mesh(new THREE.BoxGeometry(1.6,0.08,1.4),topMat);
+    topPlate.position.y=1.14; g.add(topPlate);
+    // Burner ring
+    const burnMat=new THREE.MeshPhongMaterial({color:0x3a3a3a,shininess:30});
+    const burn=new THREE.Mesh(new THREE.TorusGeometry(0.38,0.06,8,20),burnMat);
+    burn.position.y=1.16; burn.rotation.x=Math.PI/2; g.add(burn);
+    // Inner burner
+    const ib=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.28,0.04,12),
+      new THREE.MeshPhongMaterial({color:0x222222,shininess:10}));
+    ib.position.y=1.16; g.add(ib);
+    // Progress ring (glow)
+    const ringMat=new THREE.MeshPhongMaterial({color:0xFF4400,emissive:0xFF2200,emissiveIntensity:0,shininess:60});
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(0.42,0.05,8,28),ringMat);
+    ring.position.y=1.18; ring.rotation.x=Math.PI/2; g.add(ring);
+    stoveRings.push({ring,mat:ringMat});
+    // Control panel on front face
+    const panMat=new THREE.MeshPhongMaterial({color:0x111111,shininess:40});
+    const pan=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.3,0.08),panMat);
+    pan.position.set(0,0.7,-0.65); g.add(pan);
+    // Knobs
+    [-0.45,0,0.45].forEach(kx=>{
+      const knob=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.1,8),
+        new THREE.MeshPhongMaterial({color:0x555555,shininess:80}));
+      knob.position.set(kx,0.73,-0.68); g.add(knob);
+    });
+    // Legs
+    [[-0.65,-0.55],[0.65,-0.55],[-0.65,0.55],[0.65,0.55]].forEach(([lx,lz])=>{
+      const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,0.5,6),
+        new THREE.MeshPhongMaterial({color:0x444444}));
+      leg.position.set(lx,0.25,lz); g.add(leg);
+    });
+    g.position.set(x,0,5.2);
+    scene.add(g);
+    // Stove light
+    const sl=new THREE.PointLight(0xFF6600,0,4);
+    sl.position.set(x,2.5,5.2); scene.add(sl);
+    stoveLights.push(sl);
+    // Emoji above stove (dish being cooked)
+    const eSprite=makeEmojiSprite('',0.7);
+    eSprite.position.set(x,2.1,5.2);
+    eSprite.visible=false;
+    scene.add(eSprite);
+    stoveEmojiSprites.push(eSprite);
+    // Hitbox
+    const hm=new THREE.Mesh(
+      new THREE.BoxGeometry(1.9,2.5,1.7),
+      new THREE.MeshBasicMaterial({visible:false})
+    );
+    hm.position.set(x,1.2,5.2);
+    hm.userData={type:'stove',id:i}; scene.add(hm);
+    stationData.push({type:'stove',id:i,pos:{x,z:5.2},mesh:hm});
+    obstacles.push({cx:x,cz:5.2,hw:0.88,hd:0.78});
+  });
+  // Ceiling fan / vent above stoves
+  const ventMat=new THREE.MeshPhongMaterial({color:0x222222});
+  const vent=new THREE.Mesh(new THREE.BoxGeometry(xs.length*3.5,0.15,1.2),ventMat);
+  vent.position.set(0,3.8,5.2); scene.add(vent);
+}
+
+function buildTables(){
+  const positions=tablePositions();
+  const clothColors=[0x8B0000,0x1a237e,0x1b5e20,0x0d47a1,0x4a148c,0x006064,0x880E4F,0x33691E];
+  positions.forEach((pos,i)=>{
+    const g=new THREE.Group();
+    // Table top with rounded feel (chamfered)
+    const topMat=new THREE.MeshPhongMaterial({color:0x7D4B1A,shininess:50});
+    const top=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.12,1.2),topMat);
+    top.position.y=0.88; top.castShadow=true; g.add(top);
+    // Cloth on top
+    const clothMat=new THREE.MeshLambertMaterial({color:clothColors[i%clothColors.length]});
+    const cloth=new THREE.Mesh(new THREE.BoxGeometry(1.65,0.04,1.05),clothMat);
+    cloth.position.y=0.94; g.add(cloth);
+    // Edge trim
+    const trim=new THREE.Mesh(new THREE.BoxGeometry(1.82,0.04,1.22),
+      new THREE.MeshPhongMaterial({color:0xB8860B,shininess:60}));
+    trim.position.y=0.88; g.add(trim);
+    // Pedestal leg (single round pedestal)
+    const pedMat=new THREE.MeshPhongMaterial({color:0x5D3A1A,shininess:30});
+    const ped=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.14,0.8,10),pedMat);
+    ped.position.y=0.44; g.add(ped);
+    // Foot base
+    const foot=new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.55,0.07,10),pedMat);
+    foot.position.y=0.07; g.add(foot);
+    // Chairs (2 per table)
+    buildChairs(g, [[-1.25,0,false],[1.25,0,true]]);
+    // Table candle centerpiece
+    const candleHolder=new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,0.06,8),
+      new THREE.MeshPhongMaterial({color:0xC0C0C0,shininess:90}));
+    candleHolder.position.y=0.98; g.add(candleHolder);
+    const candleBody=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.12,8),
+      new THREE.MeshPhongMaterial({color:0xFFFDE7,shininess:20}));
+    candleBody.position.y=1.1; g.add(candleBody);
+    // Status ball above table
+    const statBall=new THREE.Mesh(new THREE.SphereGeometry(0.14,10,10),
+      new THREE.MeshPhongMaterial({color:0x333333,emissive:0x111111,emissiveIntensity:0.3,shininess:60}));
+    statBall.position.y=2.1; g.add(statBall);
+    // Table number label
+    const numSprite=makeTextSprite(`B${i+1}`,{bg:'rgba(0,0,0,0.5)',fg:'#FFD700',size:28});
+    numSprite.position.y=1.65; numSprite.scale.set(0.5,0.25,1); g.add(numSprite);
+    // Patience bar sprite above customer (initially hidden)
+    const patSprite=makePatBarSprite();
+    patSprite.position.y=2.6; patSprite.visible=false;
+    patSprite.userData={type:'patBar',tableId:i}; g.add(patSprite);
+
+    g.position.set(pos.x,0,pos.z);
+    g.userData={type:'table',id:i};
+    scene.add(g);
+    tableMeshData.push({group:g,statusBall:statBall,patBarSprite:patSprite,idx:i,pos});
+    // Table hitbox
+    const hm=new THREE.Mesh(
+      new THREE.BoxGeometry(2.0,2.4,1.5),
+      new THREE.MeshBasicMaterial({visible:false})
+    );
+    hm.position.set(pos.x,1,pos.z); hm.userData={type:'table',id:i}; scene.add(hm);
+    obstacles.push({cx:pos.x,cz:pos.z,hw:1.0,hd:0.75});
+    // Ceiling light above table
+    const lampMat=new THREE.MeshPhongMaterial({color:0xFFFF99,emissive:0xFFDD44,emissiveIntensity:0.7});
+    const lamp=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.22,0.2,8),lampMat);
+    lamp.position.set(pos.x,3.6,pos.z); scene.add(lamp);
+    const lampLight=new THREE.PointLight(0xFFE090,0.35,4.5);
+    lampLight.position.set(pos.x,3.4,pos.z); scene.add(lampLight);
+  });
+}
+
+function buildChairs(tableGroup, configs){
+  const chairMat=new THREE.MeshPhongMaterial({color:0x3D2409,shininess:20});
+  const cushMat=new THREE.MeshLambertMaterial({color:0x8B0000});
+  configs.forEach(([x,z,flip])=>{
+    const g=new THREE.Group();
+    // Seat
+    const seat=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.07,0.52),chairMat);
+    seat.position.y=0.5; g.add(seat);
+    // Cushion
+    const cush=new THREE.Mesh(new THREE.BoxGeometry(0.54,0.06,0.46),cushMat);
+    cush.position.y=0.56; g.add(cush);
+    // Back
+    const backZ=flip?0.22:-0.22;
+    const back=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.44,0.07),chairMat);
+    back.position.set(0,0.74,backZ); g.add(back);
+    // Back slat decorative
+    const slat=new THREE.Mesh(new THREE.BoxGeometry(0.36,0.26,0.05),chairMat);
+    slat.position.set(0,0.74,backZ+0.02*(flip?-1:1)); g.add(slat);
+    // Legs
+    [[-0.22,-0.2],[0.22,-0.2],[-0.22,0.2],[0.22,0.2]].forEach(([lx,lz])=>{
+      const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.5,6),chairMat);
+      leg.position.set(lx,0.25,lz); g.add(leg);
+    });
+    g.position.set(x,0,z);
+    tableGroup.add(g);
+  });
+}
+
+function buildEntrance(){
+  // Entrance mat
+  const matMesh=new THREE.Mesh(new THREE.BoxGeometry(5.5,0.07,1.8),
+    new THREE.MeshLambertMaterial({color:0x3d0040}));
+  matMesh.position.set(0,0.01,-5.2); scene.add(matMesh);
+  // Welcome text
+  const wSprite=makeTextSprite('🚪 LỐI VÀO',{bg:'rgba(80,0,100,0.7)',fg:'#FFD700',size:24});
+  wSprite.position.set(0,0.2,-5.2); wSprite.scale.set(1.2,0.35,1); scene.add(wSprite);
+  // Door arch posts
+  const archMat=new THREE.MeshPhongMaterial({color:0x1a0030,shininess:20});
+  [-2.6,2.6].forEach(x=>{
+    const post=new THREE.Mesh(new THREE.BoxGeometry(0.22,4,0.22),archMat);
+    post.position.set(x,2,-5.9); scene.add(post);
+  });
+  const archTop=new THREE.Mesh(new THREE.BoxGeometry(5.5,0.22,0.22),archMat);
+  archTop.position.set(0,4,-5.9); scene.add(archTop);
+  // Queue spots
+  for(let xi=-2;xi<=2;xi+=1.3){
+    const spot=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.28,0.03,10),
+      new THREE.MeshPhongMaterial({color:0xAA00FF,emissive:0x6600CC,emissiveIntensity:0.5}));
+    spot.position.set(xi,0.02,-4.8); scene.add(spot);
+    // Pulsing ring
+    const pring=new THREE.Mesh(new THREE.TorusGeometry(0.32,0.03,6,16),
+      new THREE.MeshPhongMaterial({color:0xCC00FF,emissive:0x8800AA,emissiveIntensity:0.4}));
+    pring.position.set(xi,0.03,-4.8); pring.rotation.x=Math.PI/2; scene.add(pring);
+  }
+  obstacles.push({cx:0,cz:-8,hw:11,hd:2}); // back wall barrier
+}
+
+function buildChef(){
+  chefGroup=new THREE.Group();
+  // Legs
+  const legMat=new THREE.MeshPhongMaterial({color:0x1a1a4a,shininess:20});
+  [[-0.12,0.28],[0.12,0.28]].forEach(([lx,_])=>{
+    const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.09,0.56,8),legMat);
+    leg.position.set(lx,0.28,0); chefGroup.add(leg);
+  });
+  // Shoes
+  const shoeMat=new THREE.MeshPhongMaterial({color:0x111111,shininess:60});
+  [[-0.12,0.06],[0.12,0.06]].forEach(([lx,_])=>{
+    const shoe=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.1,0.26),shoeMat);
+    shoe.position.set(lx,0.07,0.05); chefGroup.add(shoe);
+  });
+  // Body / uniform (white chef jacket)
+  const jacketMat=new THREE.MeshPhongMaterial({color:0xF8F8F8,shininess:30});
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(0.24,0.27,0.78,10),jacketMat);
+  body.position.y=0.92; chefGroup.add(body);
+  // Buttons on jacket
+  const btnMat=new THREE.MeshPhongMaterial({color:0x333333,shininess:60});
+  [0.7,0.85,1.0].forEach(by=>{
+    const btn=new THREE.Mesh(new THREE.SphereGeometry(0.028,6,6),btnMat);
+    btn.position.set(0.05,by,0.24); chefGroup.add(btn);
+  });
+  // Apron
+  const apronMat=new THREE.MeshLambertMaterial({color:0x1565C0});
+  const apron=new THREE.Mesh(new THREE.BoxGeometry(0.32,0.52,0.08),apronMat);
+  apron.position.set(0,0.76,0.25); chefGroup.add(apron);
+  // Apron strings
+  const strMat=new THREE.MeshLambertMaterial({color:0x0D47A1});
+  [-0.13,0.13].forEach(sx=>{
+    const str=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.14,0.06),strMat);
+    str.position.set(sx,1.05,0.22); chefGroup.add(str);
+  });
+  // Neck
+  const neckMat=new THREE.MeshPhongMaterial({color:0xFFD08A,shininess:20});
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.12,0.16,8),neckMat);
+  neck.position.y=1.35; chefGroup.add(neck);
+  // Head
+  const headMat=new THREE.MeshPhongMaterial({color:0xFFD08A,shininess:25});
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.24,12,12),headMat);
+  head.position.y=1.67; chefGroup.add(head);
+  // Eyes
+  const eyeMat=new THREE.MeshBasicMaterial({color:0x111111});
+  [[-0.08,1.71,0.21],[0.08,1.71,0.21]].forEach(([ex,ey,ez])=>{
+    const eye=new THREE.Mesh(new THREE.SphereGeometry(0.03,6,6),eyeMat);
+    eye.position.set(ex,ey,ez); chefGroup.add(eye);
+  });
+  // Smile
+  const smileMat=new THREE.MeshBasicMaterial({color:0x8B4513});
+  const smile=new THREE.Mesh(new THREE.TorusGeometry(0.06,0.015,4,8,Math.PI),smileMat);
+  smile.position.set(0,1.63,0.22); smile.rotation.z=Math.PI; chefGroup.add(smile);
+  // Chef hat brim
+  const hatMat=new THREE.MeshPhongMaterial({color:0xFFFFFF,shininess:20});
+  const brim=new THREE.Mesh(new THREE.CylinderGeometry(0.34,0.34,0.06,12),hatMat);
+  brim.position.y=1.97; chefGroup.add(brim);
+  // Hat cylinder
+  const hatTop=new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.26,0.36,12),hatMat);
+  hatTop.position.y=2.24; chefGroup.add(hatTop);
+  // Hat top
+  const hatCap=new THREE.Mesh(new THREE.CylinderGeometry(0.26,0.26,0.04,12),hatMat);
+  hatCap.position.y=2.43; chefGroup.add(hatCap);
+  // Arms (will animate with carry)
+  const armMat=new THREE.MeshPhongMaterial({color:0xF8F8F8,shininess:30});
+  const lArm=new THREE.Mesh(new THREE.CylinderGeometry(0.075,0.075,0.5,8),armMat);
+  lArm.position.set(-0.36,1.08,0); lArm.rotation.z=0.35; lArm.userData={armTag:'L'}; chefGroup.add(lArm);
+  const rArm=new THREE.Mesh(new THREE.CylinderGeometry(0.075,0.075,0.5,8),armMat);
+  rArm.position.set(0.36,1.08,0); rArm.rotation.z=-0.35; rArm.userData={armTag:'R'}; chefGroup.add(rArm);
+  // Hands
+  const handMat=new THREE.MeshPhongMaterial({color:0xFFD08A,shininess:10});
+  const lHand=new THREE.Mesh(new THREE.SphereGeometry(0.09,8,8),handMat);
+  lHand.position.set(-0.51,0.87,0); lHand.userData={armTag:'LH'}; chefGroup.add(lHand);
+  const rHand=new THREE.Mesh(new THREE.SphereGeometry(0.09,8,8),handMat);
+  rHand.position.set(0.51,0.87,0); rHand.userData={armTag:'RH'}; chefGroup.add(rHand);
+  // Carry sprite (dish held in front)
+  const carrySprite=makeEmojiSprite('',0.65);
+  carrySprite.position.set(0,1.6,0.45);
+  carrySprite.visible=false; carrySprite.userData={type:'carrySprite'}; chefGroup.add(carrySprite);
+
+  chefGroup.castShadow=true;
+  chefGroup.position.set(0,0,-3);
+  scene.add(chefGroup);
+}
+
+// ══════════════════════════════════════════════════════════════
+// SPRITE HELPERS
+// ══════════════════════════════════════════════════════════════
+function makeEmojiSprite(emoji,scale=0.6){
+  const tex=getEmojiTex(emoji||'');
+  const mat=new THREE.SpriteMaterial({map:tex,transparent:true});
+  const s=new THREE.Sprite(mat);
+  s.scale.set(scale,scale,scale);
+  return s;
+}
+
+function getEmojiTex(emoji){
+  if(!emoji) emoji='';
+  if(emojiCache[emoji]) return emojiCache[emoji];
+  const c=document.createElement('canvas'); c.width=c.height=80;
+  const ctx=c.getContext('2d');
+  if(emoji){ ctx.font='60px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(emoji,40,44); }
+  const t=new THREE.CanvasTexture(c);
+  emojiCache[emoji]=t; return t;
+}
+
+function makeTextSprite(text,opts={}){
+  const {bg='rgba(0,0,0,0.6)',fg='#FFD700',size=22}=opts;
+  const c=document.createElement('canvas'); c.width=256; c.height=80;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle=bg; ctx.roundRect(0,0,256,80,12); ctx.fill();
+  ctx.fillStyle=fg; ctx.font=`bold ${size}px Nunito,sans-serif`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(text,128,40);
+  const t=new THREE.CanvasTexture(c);
+  const mat=new THREE.SpriteMaterial({map:t,transparent:true});
+  const s=new THREE.Sprite(mat);
+  return s;
+}
+
+function makePatBarSprite(){
+  const c=document.createElement('canvas'); c.width=128; c.height=16;
+  const t=new THREE.CanvasTexture(c);
+  const mat=new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false});
+  const s=new THREE.Sprite(mat);
+  s.scale.set(1.2,0.15,1);
+  s.userData={patCanvas:c,patCtx:c.getContext('2d'),patTex:t};
+  return s;
+}
+
+function updatePatBar(sprite,pct){
+  if(!sprite||!sprite.userData.patCanvas) return;
+  const {patCanvas:c,patCtx:ctx,patTex:t}=sprite.userData;
+  ctx.clearRect(0,0,128,16);
+  // bg
+  ctx.fillStyle='rgba(0,0,0,0.7)';
+  ctx.roundRect(2,2,124,12,6); ctx.fill();
+  // fill
+  const col=pct>60?'#00E676':pct>30?'#FFB300':'#FF1744';
+  const grd=ctx.createLinearGradient(4,0,124,0);
+  grd.addColorStop(0,col); grd.addColorStop(1,'rgba(255,255,255,0.5)');
+  ctx.fillStyle=grd;
+  ctx.roundRect(4,4,Math.max(1,(120*pct/100)),8,4); ctx.fill();
+  t.needsUpdate=true;
+}
+
+function tablePositions(){
+  const n=LV.tables;
+  const cols=Math.min(n,3);
+  const rows=Math.ceil(n/cols);
+  const positions=[];
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+    if(positions.length>=n) break;
+    positions.push({
+      x:(c-(cols-1)/2)*3.6,
+      z:0.4+r*3.0-(rows-1)*1.2
+    });
+  }
+  return positions;
+}
+
+// ══════════════════════════════════════════════════════════════
+// COLLISION
+// ══════════════════════════════════════════════════════════════
+const CHEF_RADIUS=0.3;
+function resolveMove(cx,cz,nx,nz){
+  // Clamp to floor bounds
+  nx=Math.max(-9.5,Math.min(9.5,nx));
+  nz=Math.max(-5.5,Math.min(5.5,nz));
+  // Check each obstacle
+  for(const ob of obstacles){
+    const minx=ob.cx-ob.hw-CHEF_RADIUS, maxx=ob.cx+ob.hw+CHEF_RADIUS;
+    const minz=ob.cz-ob.hd-CHEF_RADIUS, maxz=ob.cz+ob.hd+CHEF_RADIUS;
+    const inOldX=cx>minx&&cx<maxx, inOldZ=cz>minz&&cz<maxz;
+    const inNewX=nx>minx&&nx<maxx, inNewZ=nz>minz&&nz<maxz;
+    if(inNewX&&inNewZ){
+      // Colliding — try sliding
+      if(!inOldX) nx=cx; // block X
+      if(!inOldZ) nz=cz; // block Z
+      // If both blocked, stay put
+    }
+  }
+  return {x:nx,z:nz};
+}
+
+// ══════════════════════════════════════════════════════════════
+// GAME START
+// ══════════════════════════════════════════════════════════════
+function startGame(regionId,levelId){
+  RG=REGIONS.find(r=>r.id===regionId);
+  LV=RG.levels.find(l=>l.id===levelId);
+  if(!RG||!LV) return;
+  _curRegion=RG; // needed for result screen next-level
+  if(!renderer) initThree();
+  buildScene();
+  G=mkState();
+  chefGroup.position.set(0,0,G.chef.pos.z);
+  // UI
+  document.getElementById('hudLv').textContent=`${RG.flag} Màn ${LV.id} · ${RG.name}`;
+  document.getElementById('cookBtn').classList.add('hidden');
+  document.getElementById('ingOverlay').style.display='none';
+  setStatus('Chọn món ăn → Bấm lấy nguyên liệu',false);
+  renderRecipePanel(); renderOrderPanel();
+  _rOpen=true; _oOpen=true;
+  document.getElementById('rPanel').classList.remove('closed');
+  document.getElementById('oPanel').classList.remove('closed');
+  document.getElementById('rTab').classList.remove('closed');
+  document.getElementById('oTab').classList.remove('closed');
+  // Canvas events
+  const cv=document.getElementById('gameCanvas');
+  cv.removeEventListener('pointerup',onCanvasPointer);
+  cv.addEventListener('pointerup',onCanvasPointer);
+  showScreen('game');
+  tip2(`${RG.flag} ${RG.name} · Màn ${LV.id} · Mục tiêu ${(LV.target/1000).toFixed(1)}K đ`);
+  if(gameRAF) cancelAnimationFrame(gameRAF);
+  clock.start();
+  loop3D();
+}
+
+// ══════════════════════════════════════════════════════════════
+// GAME LOOP
+// ══════════════════════════════════════════════════════════════
+function loop3D(){
+  gameRAF=requestAnimationFrame(loop3D);
+  const dt=Math.min(clock.getDelta(),0.1);
+  if(G&&G.running) tick(dt);
+  if(G) animateScene(dt);
+  renderer.render(scene,camera);
+}
+
+function tick(dt){
+  G.time-=dt;
+  if(G.time<=0){G.time=0;endGame();return;}
+  updateHUD();
+
+  // Spawn
+  G.spawnTimer-=dt;
+  if(G.spawnTimer<=0){
+    G.spawnTimer=LV.spawn+Math.random()*2.5;
+    if(G.queue.length<5) spawnCustomer();
+  }
+
+  // Queue patience drain
+  G.queue=G.queue.filter(c=>{
+    c.seatPat-=dt*LV.queuePatRate;
+    if(c.seatPat<=0){
+      G.rep=Math.max(0,G.rep-0.3);
+      G.stats.angry++;
+      floatW(`${c.emoji}😤`,c.pos.x,c.pos.z,'#FF1744');
+      playS('wrong');
+      removeCustMesh(c.id);
+      return false;
+    }
+    return true;
+  });
+
+  // Move / update customers
+  G.customers.forEach(c=>{
+    if(c.state==='walkingToTable'){
+      const tp=tableMeshData[c.tableId]?.pos||{x:0,z:0};
+      const dx=tp.x-c.pos.x, dz=tp.z-c.pos.z;
+      const d=Math.hypot(dx,dz);
+      if(d>0.12){
+        c.pos.x+=dx/d*CUST_SPEED*dt;
+        c.pos.z+=dz/d*CUST_SPEED*dt;
+      } else {
+        c.pos.x=tp.x; c.pos.z=tp.z; c.state='seated';
+        const tbl=G.tables[c.tableId];
+        tbl.state='occupied'; tbl.cust=c;
+        const recs=RG.recipes.slice(0,LV.recipeCount);
+        tbl.order=recs[Math.floor(Math.random()*recs.length)];
+        tbl.patience=100; G.stats.seated++;
+        floatW('😊',tp.x,tp.z-0.6,'#00E676');
+        // Show order emoji above table
+        updateTableIndicator(c.tableId);
+        renderOrderPanel();
+        // Show order emoji as sprite above table
+        const td=tableMeshData[c.tableId];
+        if(td&&tbl.order){
+          const os=makeEmojiSprite(tbl.order.e,0.7);
+          os.position.set(0,2.5,0);
+          os.userData={type:'orderSprite',tableId:c.tableId};
+          td.group.add(os);
+          td.orderSprite=os;
+        }
+      }
+    } else if(c.state==='leaving'){
+      const tx=c.leaveTarget.x, tz=c.leaveTarget.z;
+      c.pos.x+=(tx-c.pos.x)*dt*3.5;
+      c.pos.z+=(tz-c.pos.z)*dt*3.5;
+      if(Math.hypot(tx-c.pos.x,tz-c.pos.z)<0.25){
+        removeCustMesh(c.id); c.done=true;
+      }
+    }
+  });
+  G.customers=G.customers.filter(c=>!c.done);
+
+  // Table states
+  G.tables.forEach((t,ti)=>{
+    if(t.state==='occupied'&&t.order){
+      t.patience-=dt*LV.foodPatRate;
+      const td=tableMeshData[ti];
+      if(td&&td.patBarSprite){
+        td.patBarSprite.visible=true;
+        updatePatBar(td.patBarSprite,Math.max(0,t.patience));
+      }
+      if(t.patience<=0){
+        t.patience=0; G.rep=Math.max(0,G.rep-0.4); G.stats.angry++;
+        floatW('😡',tableMeshData[ti]?.pos.x||0,tableMeshData[ti]?.pos.z||0,'#FF1744');
+        playS('wrong');
+        makeLeave(ti); clearTable(ti); renderOrderPanel();
+      }
+    } else {
+      const td=tableMeshData[ti];
+      if(td&&td.patBarSprite) td.patBarSprite.visible=false;
+    }
+    if(t.state==='eating'){
+      t.eatTimer-=dt;
+      if(t.eatTimer<=0){
+        t.state='paying'; t.payReady=true;
+        updateTableIndicator(ti);
+        floatW('💰',tableMeshData[ti]?.pos.x||0,tableMeshData[ti]?.pos.z||0,'#FFD700');
+        playS('ding');
+      }
+    }
+    if(t.state==='dirtyWait'){
+      t.dirtyTimer=(t.dirtyTimer||2.5)-dt;
+      if(t.dirtyTimer<=0) clearTable(ti);
+    }
+  });
+
+  // Stove cooking
+  G.stoves.forEach((s,si)=>{
+    if(s.busy&&!s.done){
+      s.prog+=dt/s.cookTime*100;
+      if(s.prog>=100){
+        s.prog=100; s.done=true;
+        playS('ding');
+        floatStove(si,'✅');
+        if(stoveEmojiSprites[si]) stoveEmojiSprites[si].visible=true;
+      }
+      if(stoveRings[si]){
+        stoveRings[si].mat.emissiveIntensity=s.prog/100*1.4;
+        stoveRings[si].mat.color.setHex(s.done?0x00E676:0xFF4400);
+        stoveRings[si].mat.emissive.setHex(s.done?0x00AA44:0xFF2200);
+      }
+      if(stoveLights[si]) stoveLights[si].intensity=s.busy?(0.3+Math.sin(Date.now()*0.007)*0.15):0;
+      if(stoveLights[si]) stoveLights[si].color.setHex(s.done?0x00FF44:0xFF6600);
+    }
+  });
+
+  // Chef movement with collision
+  moveChef(dt);
+
+  // Sync customer 3D positions + queue patience bar
+  [...G.queue,...G.customers].forEach(c=>{
+    const m=custMeshMap[c.id];
+    if(!m) return;
+    m.group.position.set(c.pos.x,0,c.pos.z);
+    if(c.state==='walking'||c.state==='walkingToTable'||c.state==='leaving'){
+      m.group.position.y=Math.abs(Math.sin(Date.now()*0.014*c.bf))*0.07;
+    } else {
+      m.group.position.y=0;
+    }
+    // Update queue patience bar above customer head
+    if(c.seatPat!==undefined && m.patSprite){
+      updatePatBar(m.patSprite,Math.max(0,c.seatPat));
+      m.patSprite.visible=true;
+    }
+    if(c.state==='seated'&&m.patSprite) m.patSprite.visible=false;
+  });
+}
+
+function moveChef(dt){
+  const chef=G.chef;
+  if(!chef.target) return;
+  const dx=chef.target.x-chef.pos.x;
+  const dz=chef.target.z-chef.pos.z;
+  const dist=Math.hypot(dx,dz);
+  if(dist>0.08){
+    const spd=CHEF_SPEED*dt;
+    let nx=chef.pos.x+dx/dist*spd;
+    let nz=chef.pos.z+dz/dist*spd;
+    // Only apply obstacle collision for manual floor clicks, not scripted walks
+    if(!chef.skipCol){
+      const res=resolveMove(chef.pos.x,chef.pos.z,nx,nz);
+      nx=res.x; nz=res.z;
+    } else {
+      // Scripted walk: boundary clamp only
+      nx=Math.max(-9.8,Math.min(9.8,nx));
+      nz=Math.max(-6.5,Math.min(7.5,nz));
+    }
+    chef.pos.x=nx; chef.pos.z=nz;
+    chefGroup.position.x=nx; chefGroup.position.z=nz;
+    chefGroup.position.y=Math.abs(Math.sin(Date.now()*0.013))*0.08;
+    chefGroup.rotation.y=Math.atan2(dx,dz);
+  } else {
+    chef.pos.x=chef.target.x; chef.pos.z=chef.target.z;
+    chefGroup.position.x=chef.pos.x; chefGroup.position.z=chef.pos.z;
+    chefGroup.position.y=0; chef.target=null; chef.skipCol=false;
+    onChefArrive();
+  }
+}
+
+function onChefArrive(){
+  const cb=G.chef.afterArrive;
+  G.chef.afterArrive=null;
+  if(cb) cb();
+}
+
+function walkChef(tx,tz,cb,skipCollision=false){
+  G.chef.target={x:tx,z:tz};
+  G.chef.afterArrive=cb||null;
+  G.chef.state='walk';
+  G.chef.skipCol=skipCollision; // programmatic walks skip obstacle collision
+}
+
+// ══════════════════════════════════════════════════════════════
+// INGREDIENT COLLECTION FLOW
+// ══════════════════════════════════════════════════════════════
+function startCookingFlow(){
+  const rec=G.selectedRecipe;
+  if(!rec){ tip2('⚠️ Chọn món ăn trước!'); return; }
+  if(G.chef.carry){ tip2('⚠️ Bê món ra bàn trước!'); return; }
+  if(findFreeStove()===-1){ tip2('⚠️ Bếp đang bận — chờ nấu xong!'); return; }
+  const busyStates=['walkToShelf','atShelf','collecting','hasIngredients','walk'];
+  // Allow starting from idle only (walk would mean another task is in progress)
+  if(G.chef.state!=='idle'&&G.chef.state!=='carrying'){
+    // If just walking freely (manual walk with no callback), allow it
+    if(!(G.chef.state==='walk' && !G.chef.afterArrive)){
+      tip2('Chef đang bận!'); return;
+    }
+  }
+  document.getElementById('cookBtn').classList.add('hidden');
+  // Walk to shelf area
+  G.chef.state='walkToShelf';
+  setStatus(`🚶 Đang đến lấy nguyên liệu cho ${rec.name}...`);
+  walkChef(0, 5.4, ()=>arriveAtShelf(rec), true);
+}
+
+function arriveAtShelf(rec){
+  G.chef.state='atShelf';
+  G.chef.collectTarget=rec;
+  G.chef.collectStep=0;
+  showIngredientOverlay(rec);
+  setStatus(`🥬 Lấy nguyên liệu: ${rec.name}`);
+}
+
+function showIngredientOverlay(rec){
+  document.getElementById('ioTitle').textContent=`🥬 Lấy nguyên liệu: ${rec.name} ${rec.e}`;
+  const row=document.getElementById('ioIngRow');
+  row.innerHTML=rec.ings.map((ing,i)=>`
+    <div class="io-ing ${i===0?'next':''}" id="ing_${i}" onclick="collectIngredient(${i})">
+      <span class="io-ie">${ing.e}</span>
+      <div class="io-in">${ing.n}</div>
+    </div>`).join('');
+  document.getElementById('ingOverlay').style.display='block';
+}
+
+function collectIngredient(idx){
+  const chef=G.chef;
+  if(chef.state!=='atShelf'||chef.collectStep!==idx) return;
+  const rec=chef.collectTarget;
+  if(!rec) return;
+  playS('click');
+  // Mark as collected
+  const el=document.getElementById(`ing_${idx}`);
+  if(el){ el.classList.remove('next'); el.classList.add('collected'); el.textContent=`✅ ${rec.ings[idx].e}`; }
+  // Float ingredient
+  floatW(rec.ings[idx].e,chef.pos.x,chef.pos.z,'#FFD700');
+  chef.collectStep++;
+  // Highlight next
+  if(chef.collectStep<rec.ings.length){
+    const next=document.getElementById(`ing_${chef.collectStep}`);
+    if(next){ next.classList.add('next'); }
+    setStatus(`✓ ${idx+1}/${rec.ings.length} · Lấy tiếp: ${rec.ings[chef.collectStep].n}`);
+  } else {
+    // All collected!
+    setTimeout(()=>{
+      document.getElementById('ingOverlay').style.display='none';
+      finishCollecting(rec);
+    },400);
+  }
+}
+
+function cancelIngredientPick(){
+  document.getElementById('ingOverlay').style.display='none';
+  G.chef.state='idle'; G.chef.collectTarget=null; G.chef.collectStep=0;
+  setStatus('❌ Hủy. Chọn món và thử lại.');
+  document.getElementById('cookBtn').classList.remove('hidden');
+}
+
+function finishCollecting(rec){
+  G.chef.state='hasIngredients';
+  const carrySprite=chefGroup.children.find(c=>c.userData.type==='carrySprite');
+  if(carrySprite){
+    carrySprite.material.map=getEmojiTex(rec.e);
+    carrySprite.material.needsUpdate=true;
+    carrySprite.visible=true;
+  }
+  document.getElementById('chefCarryIcon').textContent=rec.ings.map(i=>i.e).join('');
+  document.getElementById('chefCarryIcon').classList.add('has-item');
+  setStatus(`📦 Đủ nguyên liệu ${rec.name} · Đang đến bếp...`);
+  // Walk to free stove
+  const sid=findFreeStove();
+  if(sid===-1){ tip2('⚠️ Bếp đầy!'); G.chef.state='idle'; return; }
+  const sp=stationData.find(s=>s.type==='stove'&&s.id===sid);
+  const tx=sp?.pos.x||0, tz=(sp?.pos.z||5.2)-1.0;
+  walkChef(tx,tz,()=>depositToStove(sid,rec),true);
+}
+
+function depositToStove(sid,rec){
+  const stove=G.stoves[sid];
+  stove.busy=true; stove.done=false; stove.prog=0;
+  stove.cookTime=rec.cookTime; stove.recipe=rec;
+  G.chef.state='idle'; G.chef.collectTarget=null; G.chef.collectStep=0;
+  G.selectedRecipe=null;
+  const carrySprite=chefGroup.children.find(c=>c.userData.type==='carrySprite');
+  if(carrySprite){ carrySprite.visible=false; }
+  document.getElementById('chefCarryIcon').textContent='';
+  document.getElementById('chefCarryIcon').classList.remove('has-item');
+  // Update stove emoji
+  if(stoveEmojiSprites[sid]){
+    stoveEmojiSprites[sid].material.map=getEmojiTex(rec.e);
+    stoveEmojiSprites[sid].material.needsUpdate=true;
+    stoveEmojiSprites[sid].visible=true;
+  }
+  if(stoveLights[sid]) stoveLights[sid].intensity=0.3;
+  setStatus(`🍳 Đang nấu ${rec.name} (${rec.cookTime}s) · Nhấn bếp khi xong để lấy`);
+  playS('click');
+  renderRecipePanel();
+  document.getElementById('cookBtn').classList.add('hidden');
+}
+
+function pickupFromStove(sid){
+  const stove=G.stoves[sid];
+  if(!stove.done){ tip2('⏳ Chưa nấu xong!'); return; }
+  if(G.chef.carry){ tip2('⚠️ Đang cầm món — bê ra bàn trước!'); return; }
+  G.chef.carry={recipe:stove.recipe};
+  const carrySprite=chefGroup.children.find(c=>c.userData.type==='carrySprite');
+  if(carrySprite){
+    carrySprite.material.map=getEmojiTex(stove.recipe.e);
+    carrySprite.material.needsUpdate=true;
+    carrySprite.visible=true;
+  }
+  document.getElementById('chefCarryIcon').textContent=stove.recipe.e;
+  document.getElementById('chefCarryIcon').classList.add('has-item');
+  stove.busy=false; stove.done=false; stove.prog=0; stove.recipe=null;
+  if(stoveEmojiSprites[sid]) stoveEmojiSprites[sid].visible=false;
+  if(stoveLights[sid]) stoveLights[sid].intensity=0;
+  if(stoveRings[sid]){ stoveRings[sid].mat.emissiveIntensity=0; stoveRings[sid].mat.color.setHex(0xFF4400); }
+  G.chef.state='carrying';
+  setStatus(`🫱 Cầm ${G.chef.carry.recipe.name} · Nhấn bàn khách có đơn để phục vụ`);
+  playS('coin');
+  renderRecipePanel();
+}
+
+function serveTable(tid){
+  const t=G.tables[tid];
+  const carry=G.chef.carry;
+  if(!carry){ tip2('Không cầm gì!'); return; }
+  if(t.state!=='occupied'||!t.order){ tip2('Bàn không có đơn!'); return; }
+  if(t.order.id!==carry.recipe.id){
+    tip2(`❌ Sai! Khách muốn ${t.order.name} ${t.order.e}`);
+    G.rep=Math.max(0,G.rep-0.15); playS('wrong'); return;
+  }
+  const pat=t.patience/100;
+  const tip=pat>0.7?1.35:pat>0.4?1.12:1.0;
+  const earned=Math.round(t.order.price*tip);
+  G.money+=earned; G.stats.served++; G.stats.tip+=earned-t.order.price;
+  t.state='eating'; t.eatTimer=5+Math.random()*4; t.order=null; t.patience=100;
+  // Remove order sprite
+  const td=tableMeshData[tid];
+  if(td&&td.orderSprite){ td.group.remove(td.orderSprite); td.orderSprite=null; }
+  if(td&&td.patBarSprite) td.patBarSprite.visible=false;
+  updateTableIndicator(tid);
+  G.chef.carry=null;
+  const carrySprite=chefGroup.children.find(c=>c.userData.type==='carrySprite');
+  if(carrySprite) carrySprite.visible=false;
+  document.getElementById('chefCarryIcon').textContent='';
+  document.getElementById('chefCarryIcon').classList.remove('has-item');
+  G.chef.state='idle';
+  floatW(`+${earned}đ${tip>1?` 🌟`:''}`,tableMeshData[tid]?.pos.x||0,(tableMeshData[tid]?.pos.z||0)-0.6,'#FFD700');
+  setStatus(`✅ Phục vụ! +${earned}đ · Chọn món tiếp`);
+  playS('coin');
+  renderOrderPanel();
+  renderRecipePanel();
+  // Re-show cookBtn if recipe still selected and stove available
+  if(G.selectedRecipe && findFreeStove()!==-1){
+    document.getElementById('cookBtn').classList.remove('hidden');
+  } else {
+    document.getElementById('cookBtn').classList.add('hidden');
+  }
+}
+
+function collectPayment(tid){
+  const t=G.tables[tid];
+  if(!t.payReady) return;
+  const tip=Math.round(10+Math.random()*15);
+  G.money+=tip; G.stats.tip+=tip;
+  floatW(`💰+${tip}đ`,tableMeshData[tid]?.pos.x||0,(tableMeshData[tid]?.pos.z||0)-0.5,'#FFD700');
+  playS('coin');
+  makeLeave(tid);
+  t.state='dirtyWait'; t.dirtyTimer=2.5; t.payReady=false; t.cust=null;
+  const td=tableMeshData[tid];
+  if(td&&td.orderSprite){ td.group.remove(td.orderSprite); td.orderSprite=null; }
+  updateTableIndicator(tid);
+  haptic([25,15,25]);
+}
+
+function makeLeave(tid){
+  const t=G.tables[tid];
+  const c=t.cust; if(!c) return;
+  c.state='leaving'; c.leaveTarget={x:(Math.random()-.5)*2,z:-6.5};
+  t.cust=null;
+}
+
+function clearTable(tid){
+  const t=G.tables[tid];
+  t.state='empty'; t.cust=null; t.order=null; t.patience=100; t.payReady=false;
+  const td=tableMeshData[tid];
+  if(td&&td.orderSprite){ td.group.remove(td.orderSprite); td.orderSprite=null; }
+  if(td&&td.patBarSprite) td.patBarSprite.visible=false;
+  updateTableIndicator(tid);
+}
+
+function findFreeStove(){
+  for(let i=0;i<G.stoves.length;i++) if(!G.stoves[i].busy) return i;
+  return -1;
+}
+
+// ══════════════════════════════════════════════════════════════
+// CUSTOMER SPAWN
+// ══════════════════════════════════════════════════════════════
+let _custId=0;
+function spawnCustomer(){
+  const id=++_custId;
+  const slot=G.queue.length;
+  const qx=(slot-2)*1.3;
+  const emojis=['👨','👩','👴','👵','🧑','👱','🧕','👦'];
+  const cust={
+    id,emoji:emojis[id%emojis.length],
+    colorIdx:id%CUST_COLORS.length,skinIdx:id%CUST_SKINS.length,
+    seatPat:100, pos:{x:qx,z:-4.8},
+    state:'waiting',tableId:null,bf:0.7+Math.random()*0.5,
+  };
+  G.queue.push(cust);
+  // Create 3D mesh
+  const g=new THREE.Group();
+  const col=CUST_COLORS[cust.colorIdx];
+  const skin=CUST_SKINS[cust.skinIdx];
+  const bodyMat=new THREE.MeshPhongMaterial({color:col,shininess:20});
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(0.19,0.21,0.68,9),bodyMat);
+  body.position.y=0.34; g.add(body);
+  const headMat=new THREE.MeshPhongMaterial({color:skin,shininess:20});
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.21,10,10),headMat);
+  head.position.y=0.85; g.add(head);
+  // Eyes
+  const eyeM=new THREE.MeshBasicMaterial({color:0x111111});
+  [[-0.07,0.89,0.18],[0.07,0.89,0.18]].forEach(([ex,ey,ez])=>{
+    const eye=new THREE.Mesh(new THREE.SphereGeometry(0.025,6,6),eyeM);
+    eye.position.set(ex,ey,ez); g.add(eye);
+  });
+  // Hair (colored based on customer)
+  const hairMat=new THREE.MeshLambertMaterial({color:col});
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.215,10,6,[0,Math.PI*2,0,Math.PI*.6]),hairMat);
+  hair.position.y=0.95; g.add(hair);
+  // Outfit detail
+  const acc=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.08,0.06),
+    new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.3}));
+  acc.position.set(0,0.48,0.2); g.add(acc);
+  // Patience bar above head
+  const patSprite=makePatBarSprite();
+  patSprite.position.y=1.4; patSprite.visible=true;
+  g.add(patSprite);
+  g.castShadow=true;
+  g.userData={type:'customer',custId:id};
+  g.position.set(qx,0,-4.8);
+  scene.add(g);
+  custMeshMap[id]={group:g,patSprite};
+  playS('click');
+}
+
+function removeCustMesh(id){
+  if(custMeshMap[id]){ scene.remove(custMeshMap[id].group); delete custMeshMap[id]; }
+}
+
+function seatCustomer(custId){
+  const idx=G.queue.findIndex(c=>c.id===custId);
+  if(idx===-1) return;
+  const freeT=G.tables.findIndex(t=>t.state==='empty');
+  if(freeT===-1){ tip2('⚠️ Không còn bàn trống!'); return; }
+  const c=G.queue.splice(idx,1)[0];
+  c.state='walkingToTable'; c.tableId=freeT;
+  G.tables[freeT].state='reserved';
+  G.customers.push(c);
+  setStatus(`🚶 ${c.emoji} đang đến bàn ${freeT+1}...`);
+  playS('ding'); haptic([15]);
+  // Reposition remaining queue
+  G.queue.forEach((qc,qi)=>{ qc.pos.x=(qi-2)*1.3; });
+}
+
+// ══════════════════════════════════════════════════════════════
+// TABLE INDICATOR
+// ══════════════════════════════════════════════════════════════
+const TSTATE_COLORS={
+  empty:0x333333, reserved:0x2196F3, occupied:0xFF8C00,
+  eating:0x4CAF50, paying:0xFFD700, dirtyWait:0x795548
+};
+const TSTATE_EMI={empty:0,reserved:0.3,occupied:0.6,eating:0.4,paying:1.2,dirtyWait:0.2};
+
+function updateTableIndicator(tid){
+  const td=tableMeshData[tid]; if(!td) return;
+  const t=G.tables[tid];
+  const col=TSTATE_COLORS[t.state]||0x333333;
+  td.statusBall.material.color.setHex(col);
+  td.statusBall.material.emissive.setHex(col);
+  td.statusBall.material.emissiveIntensity=TSTATE_EMI[t.state]||0;
+}
+
+// ══════════════════════════════════════════════════════════════
+// ANIMATIONS (non-game)
+// ══════════════════════════════════════════════════════════════
+function animateScene(dt){
+  const t=Date.now()*0.001;
+  // Stove pulse when done
+  G?.stoves?.forEach((s,i)=>{
+    if(stoveLights[i]){
+      if(s.done) stoveLights[i].intensity=0.4+Math.sin(t*6)*0.25;
+      else if(s.busy) stoveLights[i].intensity=0.2+Math.sin(t*3)*0.1;
+    }
+    // Bounce stove emoji when done
+    if(stoveEmojiSprites[i]&&s.done){
+      stoveEmojiSprites[i].position.y=2.1+Math.sin(t*4)*0.1;
+    }
+  });
+  // Paying table pulse
+  G?.tables?.forEach((t2,i)=>{
+    const td=tableMeshData[i];
+    if(td&&t2.payReady){
+      const v=0.6+Math.sin(t*5)*0.6;
+      td.statusBall.material.emissiveIntensity=v;
+    }
+  });
+  // Chef idle sway
+  if(G?.chef?.state==='idle'&&chefGroup){
+    chefGroup.rotation.z=Math.sin(t*1.5)*0.02;
+  }
+  // Chef arm raise when carrying
+  if(chefGroup){
+    chefGroup.children.forEach(c=>{
+      if(c.userData?.armTag==='L') c.rotation.z=G?.chef?.carry?0.7:0.35;
+      if(c.userData?.armTag==='R') c.rotation.z=G?.chef?.carry?-0.7:-0.35;
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// RAYCAST / INPUT
+// ══════════════════════════════════════════════════════════════
+const _ray=new THREE.Raycaster(), _mouse=new THREE.Vector2();
+
+function onCanvasPointer(e){
+  e.preventDefault();
+  const r=renderer.domElement.getBoundingClientRect();
+  const cx=e.changedTouches?e.changedTouches[0].clientX:e.clientX;
+  const cy=e.changedTouches?e.changedTouches[0].clientY:e.clientY;
+  _mouse.x=((cx-r.left)/r.width)*2-1;
+  _mouse.y=-((cy-r.top)/r.height)*2+1;
+  _ray.setFromCamera(_mouse,camera);
+
+  if(!G||!G.running) return;
+
+  // Gather all clickable objects
+  const clickables=[];
+  scene.children.forEach(obj=>{ if(obj.userData?.type) clickables.push(obj); });
+  // Also customer groups
+  Object.values(custMeshMap).forEach(m=>clickables.push(m.group));
+
+  const hits=_ray.intersectObjects(clickables,true);
+  for(const hit of hits){
+    let o=hit.object;
+    while(o&&!o.userData?.type&&o.parent) o=o.parent;
+    if(!o||!o.userData?.type) continue;
+    const ud=o.userData;
+    if(ud.type==='customer'){
+      const c=G.queue.find(q=>q.id===ud.custId)||G.customers.find(q=>q.id===ud.custId);
+      if(c&&c.state==='waiting'){ seatCustomer(c.id); return; }
+      continue;
+    }
+    if(ud.type==='table'){ handleTableTap(ud.id); return; }
+    if(ud.type==='stove'){ handleStoveTap(ud.id); return; }
+    if(ud.type==='shelf'||ud.type==='ingspot'){
+      // Walk chef toward shelf
+      if(G.chef.state==='atShelf') return; // already there
+      if(!G.selectedRecipe){ tip2('Chọn món trước!'); return; }
+      if(G.chef.carry){ tip2('⚠️ Bê món ra bàn trước!'); return; }
+      startCookingFlow(); return;
+    }
+    if(ud.type==='floor') break;
+  }
+
+  // Floor walk - only when chef is free or carrying
+  const fhit=_ray.intersectObject(floorMesh);
+  if(fhit.length>0){
+    const pt=fhit[0].point;
+    const cs=G.chef.state;
+    // Block floor movement when chef is in scripted activities
+    const blocked=['atShelf','collecting','walkToShelf','hasIngredients'];
+    if(!blocked.includes(cs)){
+      G.chef.target={x:Math.max(-9,Math.min(9,pt.x)),z:Math.max(-5.2,Math.min(5.0,pt.z))};
+      G.chef.afterArrive=null;
+      G.chef.state='walk';
+      G.chef.skipCol=false; // manual walks use collision
+    } else if(cs==='atShelf'){
+      tip2('🥬 Đang lấy nguyên liệu — nhấn từng ô!');
+    }
+  }
+}
+
+function handleTableTap(tid){
+  const t=G.tables[tid];
+  const td=tableMeshData[tid];
+  const pos=td?.pos||{x:0,z:0};
+  if(t.payReady){
+    const tz=pos.z+1.3;
+    walkChef(pos.x,tz,()=>collectPayment(tid),true);
+    setStatus(`💰 Đến thu tiền bàn ${tid+1}...`);
+    return;
+  }
+  if(t.state==='dirtyWait'||t.state==='dirty'){
+    walkChef(pos.x,pos.z+1.3,()=>{ clearTable(tid); setStatus('🧹 Dọn bàn xong!'); },true);
+    return;
+  }
+  if(t.state==='occupied'&&G.chef.carry){
+    walkChef(pos.x,pos.z+1.3,()=>serveTable(tid),true);
+    setStatus(`🍽️ Đến phục vụ bàn ${tid+1}...`);
+    return;
+  }
+  if(t.state==='occupied'&&t.order){
+    tip2(`B${tid+1}: Chờ ${t.order.name} ${t.order.e} (${Math.round(t.patience)}%)`);
+  }
+}
+
+function handleStoveTap(sid){
+  const s=G.stoves[sid];
+  const sp=stationData.find(st=>st.type==='stove'&&st.id===sid);
+  const tx=sp?.pos.x||0, tz=(sp?.pos.z||5.2)-1.0;
+  if(s.done){
+    walkChef(tx,tz,()=>pickupFromStove(sid),true);
+    setStatus(`🫱 Đến lấy món từ bếp ${sid+1}...`);
+  } else if(s.busy){
+    tip2(`🍳 Bếp ${sid+1}: ${s.recipe?.name} ${Math.round(s.prog)}%`);
+  } else {
+    tip2(`Bếp ${sid+1} trống. Chọn món → Lấy nguyên liệu`);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// UI
+// ══════════════════════════════════════════════════════════════
+function renderRecipePanel(){
+  if(!G||!RG||!LV) return;
+  const recs=RG.recipes.slice(0,LV.recipeCount);
+  document.getElementById('rList').innerHTML=recs.map(r=>{
+    const isCooking=G.stoves.some(s=>s.recipe?.id===r.id&&s.busy);
+    const sel=G.selectedRecipe?.id===r.id;
+    return `<div class="ritem${sel?' selected':''}" onclick="selectRecipe('${r.id}')">
+      <span class="ri-e">${r.e}</span>
+      <div class="ri-name">${r.name}</div>
+      <div class="ri-info">⏱${r.t}s · 💰${r.p}đ</div>
+      <div class="ri-ings">${r.ings.map(i=>`<span class="ri-ing-dot">${i.e}</span>`).join('')}</div>
+      ${isCooking?`<div class="ri-cooking">🍳 Đang nấu</div>`:sel?`<div class="ri-cooking" style="color:var(--gold)">✓ Đã chọn</div>`:''}
     </div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════
-// START
-// ══════════════════════════════════════════
-function startGame(lId) {
-  LV = LEVELS.find(l=>l.id===lId);
-  if(!LV) return;
-  G = {
-    money:0, time:LV.time, rep:5,
-    tables: Array.from({length:LV.tables},(_,i)=>({id:i,state:'empty',cust:null,dirty:[]})),
-    slots:  Array.from({length:LV.slots}, (_,i)=>({id:i,rec:null,prog:0,done:false,busy:false,prepping:false})),
-    sink: {pile:[],prog:0,on:false},
-    tray: [],           // collected dirty dishes
-    queue: [],
-    hand: null,
-    stats:{served:0,tip:0,angry:0,washed:0},
-    spawnT:2, running:true, lastT:Date.now(),
-  };
-  cookingModal = null;
-  document.getElementById('hudLv').textContent = `Màn ${LV.id}: ${LV.name}`;
-  buildRecipeList();
-  renderAll();
-  showScreen('game');
-  tip2('🥬 Nhấn vào thực đơn → chọn nguyên liệu → nấu → phục vụ bàn!');
-  if(gameTimer) clearInterval(gameTimer);
-  gameTimer = setInterval(tick, 100);
-}
-
-// ══════════════════════════════════════════
-// TICK
-// ══════════════════════════════════════════
-function tick() {
+function selectRecipe(id){
   if(!G||!G.running) return;
-  const now = Date.now();
-  const dt = Math.min((now-G.lastT)/1000, 0.3);
-  G.lastT = now;
-
-  G.time -= dt;
-  if(G.time<=0){ G.time=0; endGame(); return; }
-
-  // patience & eating
-  G.tables.forEach(t=>{
-    if(t.state==='occupied'&&t.cust){
-      t.cust.pat -= dt*LV.pat*(t.cust.vip?1.5:1);
-      if(t.cust.pat<=0) angryLeave(t);
-    }
-    if(t.state==='eating'&&t.cust){
-      t.cust.eatT -= dt;
-      if(t.cust.eatT<=0){ t.state='paying'; playS('ding'); renderTable(t.id); }
-    }
-  });
-
-  // lightweight patience bar update (no full DOM rebuild)
-  G.tables.forEach(t=>{
-    if(t.state!=='occupied'||!t.cust) return;
-    const el = document.getElementById('tb'+t.id);
-    if(!el) return;
-    const bar = el.querySelector('.pb');
-    if(bar){ const p=t.cust.pat; bar.style.width=p.toFixed(1)+'%'; bar.className='pb '+(p>65?'hi':p>30?'md':'lo'); }
-  });
-
-  // spawn
-  G.spawnT -= dt;
-  if(G.spawnT<=0 && G.queue.length<5){ spawnCust(); G.spawnT=LV.spawn*(0.7+Math.random()*0.6); }
-  seatQueue();
-
-  // cook slots: only timer-based cooking (after all ingredients added)
-  G.slots.forEach(s=>{
-    if(s.busy&&!s.done){
-      s.prog += dt/s.rec.cookTime*100;
-      if(s.prog>=100){ s.prog=100; s.done=true; s.busy=false; playS('ding'); haptic(55); renderSlot(s.id); }
-      else { const el=document.getElementById('cs'+s.id); if(el){ const b=el.querySelector('.cs-bar'); if(b) b.style.width=s.prog.toFixed(1)+'%'; } }
-    }
-  });
-
-  // washing (one-by-one)
-  if(G.sink.on && G.sink.pile.length>0){
-    G.sink.prog += dt*25; // ~4s per dish
-    document.getElementById('wfill').style.width = G.sink.prog+'%';
-    if(G.sink.prog>=100) washOneDish();
-  }
-
-  updateHUD();
-}
-
-// ══════════════════════════════════════════
-// CUSTOMERS
-// ══════════════════════════════════════════
-function spawnCust(){
-  const pool = LV.id<3 ? CUSTS.filter(c=>!c.vip) : CUSTS;
-  const t = pool[Math.floor(Math.random()*pool.length)];
-  const rec = LV.recs.map(i=>RECIPES[i]);
-  const order = rec[Math.floor(Math.random()*rec.length)];
-  G.queue.push({n:t.n,av:t.av,vip:t.vip||0,tip:t.tip,eat:t.eat,order,pat:100,eatT:t.eat});
-  renderQueue();
-}
-function seatQueue(){
-  let ch=false;
-  G.tables.forEach(t=>{ if(t.state==='empty'&&G.queue.length>0){ t.cust=G.queue.shift(); t.state='occupied'; ch=true; renderTable(t.id); } });
-  if(ch) renderQueue();
-}
-function angryLeave(t){
-  G.rep=Math.max(0,G.rep-0.5); G.stats.angry++;
-  t.cust=null; t.state='empty';
-  floatAt('-⭐😡',t.id,'#FF1744');
-  playS('wrong'); haptic([75,35,75]);
-  renderTable(t.id);
-}
-
-// ══════════════════════════════════════════
-// COOKING MODAL (ingredient steps)
-// ══════════════════════════════════════════
-function openCookModal(recId) {
-  const freeSlot = G.slots.find(s=>!s.busy&&!s.done&&!s.prepping);
-  if(!freeSlot){ tip2('🔴 Hết bếp trống!'); return; }
-  const rec = RECIPES.find(r=>r.id===recId);
-  if(!rec) return;
-
-  freeSlot.prepping = true;
-  freeSlot.rec = rec;
-
-  cookingModal = {
-    slotId: freeSlot.id,
-    recipe: rec,
-    stepIdx: 0,
-    addedIngs: [],   // ids added in current step
-  };
-  renderModal();
-}
-
-function renderModal(){
-  if(!cookingModal) return;
-  const {recipe, stepIdx, addedIngs} = cookingModal;
-  const step = recipe.steps[stepIdx];
-  const totalSteps = recipe.steps.length;
-  const pct = Math.round(stepIdx/totalSteps*100);
-
-  // Build ingredient pool: needed + wrongs, shuffle
-  const pool = [];
-  step.ings.forEach(id=>pool.push({id, ...INGS[id], needed:true}));
-  step.wrongs.forEach(id=>pool.push({id, ...INGS[id], wrong:true}));
-  const shuffled = pool.sort(()=>Math.random()-.5);
-
-  // First needed ingredient that hasn't been added yet
-  const nextNeeded = step.ings.find(id=>!addedIngs.includes(id));
-
-  const html = `
-  <div class="modal-bg" onclick="closeModalBg(event)">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-hd">
-      <span class="modal-e">${recipe.e}</span>
-      <div class="modal-title">${recipe.name}</div>
-      <button class="modal-close" onclick="cancelCook()">✕ Huỷ</button>
-    </div>
-    <div class="modal-progress">
-      <div class="mp-label"><span>Bước ${stepIdx+1}/${totalSteps}: ${step.label}</span><span>${pct}%</span></div>
-      <div class="mp-bar-w"><div class="mp-bar" style="width:${pct+Math.round(100/totalSteps*(addedIngs.length/step.ings.length))}%"></div></div>
-    </div>
-    <div class="ing-title">🥬 Chọn nguyên liệu cần thiết</div>
-    <div class="ing-grid">
-      ${shuffled.map(ing=>{
-        const used = addedIngs.includes(ing.id);
-        const isNext = ing.id === nextNeeded;
-        return `<div class="ing-btn${used?' used':''}${isNext?' need-now':''}" id="ing_${ing.id}" onclick="addIng('${ing.id}')">
-          <span class="ing-e">${ing.e}</span>
-          <span class="ing-n">${ing.n}</span>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="modal-hint">💡 ${nextNeeded ? `Tiếp theo: ${INGS[nextNeeded].e} ${INGS[nextNeeded].n}` : 'Đủ nguyên liệu bước này!'}</div>
-  </div></div>`;
-
-  let existing = document.getElementById('modal-wrap');
-  if(!existing){ existing = document.createElement('div'); existing.id='modal-wrap'; document.body.appendChild(existing); }
-  existing.innerHTML = html;
-}
-
-function addIng(id) {
-  if(!cookingModal) return;
-  const {recipe, stepIdx, addedIngs} = cookingModal;
-  const step = recipe.steps[stepIdx];
-
-  if(addedIngs.includes(id)) return;
-
-  const isCorrect = step.ings.includes(id);
-  const isWrong = step.wrongs.includes(id);
-
-  const btn = document.getElementById('ing_'+id);
-
-  if(isCorrect) {
-    addedIngs.push(id);
-    if(btn){ btn.classList.add('correct-ing'); setTimeout(()=>btn.classList.add('used'),350); }
-    playS('click'); haptic(30);
-
-    // Check step complete
-    const allDone = step.ings.every(i=>addedIngs.includes(i));
-    if(allDone) {
-      const nextStep = stepIdx + 1;
-      if(nextStep >= recipe.steps.length) {
-        // All steps done → start cooking timer
-        setTimeout(()=>{
-          closeModal();
-          const slot = G.slots[cookingModal ? cookingModal.slotId : -1];
-          if(slot){ slot.prepping=false; slot.busy=true; slot.prog=0; slot.done=false; renderSlot(slot.id); }
-          cookingModal = null;
-        }, 400);
-      } else {
-        // Next step
-        setTimeout(()=>{
-          cookingModal.stepIdx = nextStep;
-          cookingModal.addedIngs = [];
-          renderModal();
-        }, 500);
-      }
-    } else {
-      // Refresh hint
-      const hint = document.querySelector('.modal-hint');
-      const remaining = step.ings.filter(i=>!addedIngs.includes(i));
-      if(hint && remaining.length>0) hint.textContent = `💡 Tiếp theo: ${INGS[remaining[0]].e} ${INGS[remaining[0]].n}`;
-    }
-  } else if(isWrong) {
-    if(btn){ btn.classList.add('wrong-ing'); setTimeout(()=>btn.classList.remove('wrong-ing'),400); }
-    // Minor penalty
-    G.time = Math.max(0, G.time-3);
-    playS('wrong'); haptic([60,30,60]);
-    tip2(`❌ Sai nguyên liệu! -3 giây`);
-  }
-}
-
-function cancelCook() {
-  if(!cookingModal) return;
-  const slot = G.slots[cookingModal.slotId];
-  if(slot){ slot.prepping=false; slot.rec=null; slot.busy=false; slot.done=false; slot.prog=0; renderSlot(slot.id); }
-  closeModal();
-  cookingModal = null;
-}
-
-function closeModalBg(e) {
-  if(e.target.classList.contains('modal-bg')) cancelCook();
-}
-
-function closeModal() {
-  const w = document.getElementById('modal-wrap');
-  if(w) w.innerHTML = '';
-}
-
-// ══════════════════════════════════════════
-// PICKUP & SERVE
-// ══════════════════════════════════════════
-function pickupDish(slotId) {
-  const slot = G.slots[slotId];
-  if(!slot||!slot.done) return;
-  if(G.hand){ tip2('👐 Đặt món đang cầm xuống trước!'); return; }
-  G.hand = {rec:slot.rec};
-  slot.rec=null; slot.done=false; slot.busy=false; slot.prog=0;
-  playS('click'); haptic(35);
-  renderSlot(slotId);
-  renderHand();
-  renderTables();
-}
-
-function dropDish(){ G.hand=null; renderHand(); renderTables(); }
-
-function clickTable(tid) {
-  const t = G.tables[tid];
-  if(t.state==='paying'){ doPay(t); return; }
-  if(t.state==='dirty'){ collectDirty(t); return; }
-  if(t.state==='occupied'&&t.cust){
-    if(!G.hand){ tip2(`🍽️ Nấu ${t.cust.order.e} ${t.cust.order.name} rồi mang lại!`); return; }
-    if(G.hand.rec.id===t.cust.order.id) serve(t);
-    else {
-      const el=document.getElementById('tb'+tid);
-      if(el){el.classList.add('shake');setTimeout(()=>el.classList.remove('shake'),450);}
-      tip2(`❌ Bàn ${tid+1} muốn ${t.cust.order.e} ${t.cust.order.name}!`);
-      playS('wrong'); haptic([55,25,55]);
+  G.selectedRecipe=RG.recipes.find(r=>r.id===id)||null;
+  renderRecipePanel();
+  if(G.selectedRecipe){
+    setStatus(`✓ ${G.selectedRecipe.name} · Bấm 🥬 Lấy nguyên liệu`);
+    // Only show cook button if chef is free (idle or free-walking)
+    const canCook = !G.chef.carry &&
+      (G.chef.state==='idle' || (G.chef.state==='walk' && !G.chef.afterArrive));
+    if(canCook && findFreeStove()!==-1){
+      document.getElementById('cookBtn').classList.remove('hidden');
     }
   }
-}
-
-function serve(t) {
-  const pat=t.cust.pat, base=G.hand.rec.price;
-  const tpct = pat>=75?.5:pat>=50?.25:pat>=20?.1:0;
-  const tip = Math.round(base*tpct*t.cust.tip);
-  G.money += base+tip; G.stats.served++; G.stats.tip+=tip;
-  t._pay={base,tip}; t.state='eating'; G.hand=null;
-  playS('coin'); haptic(50);
-  floatAt(`+${base+tip}đ`,t.id,'#FFD700');
-  if(tip>0) floatAt(`🤑 +${tip}tip`,t.id,'#00E676');
-  renderHand(); renderTable(t.id); renderTables();
-  setTimeout(()=>{t._pay=null;renderTable(t.id);},2000);
-}
-
-function doPay(t) {
-  // Dishes = food emoji + cutlery
-  const dishes = [t.cust.order.e,'🥢'];
-  if(Math.random()>.5) dishes.push('🥣');
-  if(Math.random()>.6) dishes.push('🫙');
-  t.dirty=dishes; t.cust=null; t.state='dirty';
-  playS('click'); renderTable(t.id);
-}
-
-// ══════════════════════════════════════════
-// DISH COLLECTION & WASHING
-// ══════════════════════════════════════════
-function collectDirty(t) {
-  // Put dirty dishes into tray
-  t.dirty.forEach(d=>G.tray.push(d));
-  t.dirty=[]; t.state='washing';
-  playS('click'); renderTable(t.id); renderTray();
-  setTimeout(()=>{ if(t.state==='washing'){t.state='empty';renderTable(t.id);} },800);
-}
-
-function sendTrayToSink() {
-  if(G.tray.length===0) return;
-  G.tray.forEach(d=>G.sink.pile.push(d));
-  G.tray=[];
-  renderTray(); renderSink();
-  tip2('💧 Dĩa đã chuyển vào bồn! Nhấn Rửa để rửa từng cái.');
-}
-
-function toggleWash() {
-  if(G.sink.pile.length===0){tip2('✅ Bồn trống rồi!');return;}
-  G.sink.on = !G.sink.on;
-  document.getElementById('wbtn').textContent = G.sink.on?'⏸ Dừng':'Rửa!';
-}
-
-function washOneDish() {
-  G.sink.pile.shift();
-  G.sink.prog=0; G.stats.washed++;
-  document.getElementById('wfill').style.width='0%';
   playS('click');
-  renderSink();
-  if(G.sink.pile.length===0){
-    G.sink.on=false;
-    document.getElementById('wbtn').textContent='Rửa!';
-    tip2('✨ Sạch bóng hết rồi!');
-  }
 }
 
-// ══════════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════════
-function renderAll(){ buildRecipeList(); renderSlots(); renderTables(); renderQueue(); renderHand(); renderTray(); renderSink(); updateHUD(); }
-
-function buildRecipeList() {
-  document.getElementById('recList').innerHTML = LV.recs.map(i=>{
-    const r=RECIPES[i];
-    return `<div class="rec" onclick="openCookModal('${r.id}')">
-      <span class="re">${r.e}</span>
-      <div>
-        <div class="rn">${r.name}</div>
-        <div class="rm"><span>⏱${r.cookTime}s</span><span class="rp">${r.price}đ</span></div>
+function renderOrderPanel(){
+  const orders=[];
+  G.tables.forEach((t,i)=>{ if(t.order) orders.push({tid:i,rec:t.order,pat:t.patience}); });
+  const el=document.getElementById('oList');
+  if(!orders.length){ el.innerHTML='<div class="no-orders">Không có đơn</div>'; return; }
+  el.innerHTML=orders.map(o=>{
+    const cls=o.pat>60?'hi':o.pat>30?'md':'lo';
+    return `<div class="oitem" onclick="handleTableTap(${o.tid})">
+      <div class="oi-tb">B${o.tid+1}</div>
+      <span class="oi-e">${o.rec.e}</span>
+      <div class="oi-body">
+        <div class="oi-nm">${o.rec.name}</div>
+        <div class="oi-bw"><div class="oi-bf ${cls}" style="width:${o.pat}%"></div></div>
       </div>
     </div>`;
   }).join('');
 }
 
-function renderSlots() {
-  document.getElementById('cslots').innerHTML = G.slots.map(s=>buildSlotHTML(s)).join('');
-}
-function renderSlot(id) {
-  const c=document.getElementById('cslots'); if(!c||!c.children[id]){renderSlots();return;}
-  const tmp=document.createElement('div'); tmp.innerHTML=buildSlotHTML(G.slots[id]);
-  c.children[id].replaceWith(tmp.firstChild);
-}
-function buildSlotHTML(s) {
-  if(s.prepping) return `<div class="cs prep" id="cs${s.id}">
-    <span class="cs-e">${s.rec?s.rec.e:'🥬'}</span>
-    <div class="cs-info"><div class="cs-nm">${s.rec?s.rec.name:'Đang chọn...'}</div>
-    <div class="cs-st">🥬 Chọn nguyên liệu...</div></div></div>`;
-  if(!s.rec) return `<div class="cs" id="cs${s.id}"><span class="cs-empty">🍳 Trống</span></div>`;
-  if(s.busy) return `<div class="cs cook" id="cs${s.id}">
-    <span class="cs-e">${s.rec.e}</span>
-    <div class="cs-info"><div class="cs-nm">${s.rec.name}</div>
-    <div class="cs-st">🔥 Đang nấu...</div>
-    <div class="cs-bar-w"><div class="cs-bar" style="width:${s.prog.toFixed(1)}%"></div></div></div></div>`;
-  return `<div class="cs done" id="cs${s.id}" onclick="pickupDish(${s.id})">
-    <span class="cs-e">${s.rec.e}</span>
-    <div class="cs-info"><div class="cs-nm">${s.rec.name}</div>
-    <div class="cs-ok">✅ Xong! Lấy →</div></div></div>`;
-}
-
-function renderTables() {
-  const g=document.getElementById('tblGrid');
-  const cols=LV.tables<=3?2:LV.tables<=5?2:LV.tables<=7?3:4;
-  g.style.gridTemplateColumns=`repeat(${cols},1fr)`;
-  g.innerHTML=G.tables.map(t=>buildTableHTML(t)).join('');
-}
-function renderTable(id) {
-  const el=document.getElementById('tb'+id);
-  if(!el){renderTables();return;}
-  const t=G.tables[id];
-  const isTarget=G.hand&&t.state==='occupied'&&t.cust?.order.id===G.hand.rec.id;
-  el.className=`tb ${t.state}${isTarget?' serve-ok':''}`;
-  el.innerHTML=buildTableInner(t);
-}
-function buildTableHTML(t) {
-  const isTarget=G.hand&&t.state==='occupied'&&t.cust?.order.id===G.hand.rec.id;
-  return `<div class="tb ${t.state}${isTarget?' serve-ok':''}" id="tb${t.id}" onclick="clickTable(${t.id})">${buildTableInner(t)}</div>`;
-}
-function buildTableInner(t) {
-  let h=`<div class="tb-num">🪑 Bàn ${t.id+1}</div>`;
-  if(t.state==='empty') return h+`<div class="t-empty">·· Trống ··</div>`;
-  if(t.state==='occupied'&&t.cust){
-    const p=t.cust.pat,pc=p>65?'hi':p>30?'md':'lo',face=p>65?'😊':p>30?'😐':'😟';
-    const vip=t.cust.vip?`<span style="font-size:.5rem;background:#FFD70018;color:#FFD700;border:1px solid #FFD70028;border-radius:4px;padding:0 3px;margin-left:2px">VIP</span>`:'';
-    return h+`<div class="tc"><span class="tav">${t.cust.av}</span>
-      <div class="tinf"><div class="tnm">${t.cust.n}${vip}</div>
-      <div class="tor"><span style="font-size:.85rem">${t.cust.order.e}</span>${t.cust.order.name}</div></div>
-      <span style="font-size:.88rem">${face}</span></div>
-      <div class="pw"><div class="pb ${pc}" style="width:${p.toFixed(1)}%"></div></div>`;
-  }
-  if(t.state==='eating'&&t.cust){
-    return h+`<div class="tc"><span class="tav">${t.cust.av}</span>
-      <div class="tinf"><div class="tnm">${t.cust.n}</div>
-      <div class="tor" style="color:#4CAF50">😋 Đang ăn...</div></div></div>`
-      +(t._pay?`<div class="pay-ov"><div class="pay-amt">💰${t._pay.base}đ</div>${t._pay.tip>0?`<div class="pay-tip">+${t._pay.tip}đ tip🤑</div>`:''}</div>`:'');
-  }
-  if(t.state==='paying'){
-    return h+`<div class="tc"><span class="tav">${t.cust?.av||'👤'}</span>
-      <div class="tinf"><div class="tnm">${t.cust?.n||''}</div>
-      <div class="tor" style="color:#FFD700">💳 Xong rồi!</div></div></div>
-      <div class="th" style="color:#FFD700">👆 Thu tiền</div>`;
-  }
-  if(t.state==='dirty'){
-    return h+`<div class="dp">${t.dirty.join(' ')}</div>
-      <div class="th" style="color:#FF8C00">👆 Thu dĩa</div>`;
-  }
-  if(t.state==='washing'){
-    return h+`<div style="text-align:center;padding:5px;font-size:.9rem">💧<br><span style="font-size:.6rem;color:#29B6F6">Đang dọn...</span></div>`;
-  }
-  return h;
-}
-
-function renderQueue(){
-  document.getElementById('qcnt').textContent=G.queue.length;
-  document.getElementById('qlist').innerHTML=G.queue.map(c=>`<div class="qp">${c.av}${c.n}<span style="color:#FF8C00">${c.order.e}</span></div>`).join('');
-}
-function renderHand(){
-  const e=document.getElementById('handEmpty'),d=document.getElementById('handDish');
-  if(G.hand){e.style.display='none';d.style.display='block';document.getElementById('handE').textContent=G.hand.rec.e;document.getElementById('handN').textContent=G.hand.rec.name;}
-  else{e.style.display='block';d.style.display='none';}
-}
-function renderTray(){
-  const empty=document.getElementById('trayEmpty'),dd=document.getElementById('trayDishes');
-  if(G.tray.length===0){empty.style.display='block';dd.style.display='none';}
-  else{
-    empty.style.display='none';dd.style.display='flex';
-    document.getElementById('trayPile').innerHTML=G.tray.map(d=>`<span class="dc">${d}</span>`).join('');
-    document.getElementById('trayCnt').textContent=`${G.tray.length} cái`;
-  }
-}
-function renderSink(){
-  document.getElementById('sinkPile').innerHTML=G.sink.pile.map((d,i)=>`<span class="dc${i===0&&G.sink.on?' washing-it':''}">${d}</span>`).join('');
-  document.getElementById('wcnt').textContent=`${G.sink.pile.length} cái`;
-  const btn=document.getElementById('wbtn');
-  btn.disabled=G.sink.pile.length===0;
-  btn.textContent=G.sink.on?'⏸ Dừng':'Rửa!';
-}
 function updateHUD(){
   document.getElementById('hudMo').textContent=`💰${G.money.toLocaleString()}đ`;
-  const m=Math.floor(G.time/60),s=Math.floor(G.time%60);
+  const m=Math.floor(G.time/60), s=Math.floor(G.time%60);
   const td=document.getElementById('hudTm');
   td.textContent=`⏱${m}:${String(s).padStart(2,'0')}`;
-  td.className='hud-tm'+(G.time<30?' warn':'');
+  td.className='ghud-tm'+(G.time<30?' warn':'');
   const r=Math.round(G.rep);
-  document.getElementById('hudRp').textContent='⭐'.repeat(r)+'☆'.repeat(5-r);
+  document.getElementById('hudStars').textContent='⭐'.repeat(r)+'☆'.repeat(5-r);
 }
 
-// ══════════════════════════════════════════
-// END
-// ══════════════════════════════════════════
+function setStatus(txt,showHint=true){
+  document.getElementById('statusTxt').textContent=txt;
+  document.getElementById('tapHint').style.display=showHint?'':'none';
+}
+
+let _rOpen=true,_oOpen=true;
+function toggleRPanel(){
+  _rOpen=!_rOpen;
+  document.getElementById('rPanel').classList.toggle('closed',!_rOpen);
+  document.getElementById('rTab').classList.toggle('closed',!_rOpen);
+}
+function toggleOPanel(){
+  _oOpen=!_oOpen;
+  document.getElementById('oPanel').classList.toggle('closed',!_oOpen);
+  document.getElementById('oTab').classList.toggle('closed',!_oOpen);
+}
+
+// ══════════════════════════════════════════════════════════════
+// HOME / LEVEL SELECT
+// ══════════════════════════════════════════════════════════════
+function renderHome(){
+  document.getElementById('regionGrid').innerHTML=REGIONS.map((r,i)=>{
+    const prev=i>0?REGIONS[i-1]:null;
+    const locked=i>0&&!scores[`${prev.id}_unlock`];
+    const best=scores[`${r.id}_best`]||0;
+    const s3=best>=r.levels[9].target*1.3?3:best>=r.levels[4].target?2:best>0?1:0;
+    return `<div class="rgcard${locked?' locked':''}" onclick="${locked?`tip2('🔒 Hoàn thành ${prev.name} trước!')`:`openRegion(${r.id})`}">
+      <span class="rg-flag">${r.flag}</span>
+      <div class="rg-name">${r.name}</div>
+      <div class="rg-best">${best>0?`🏆${(best/1000).toFixed(1)}K đ`:''}</div>
+      <div class="rg-stars">${'⭐'.repeat(s3)+'☆'.repeat(3-s3)}</div>
+      ${locked?'<div class="rg-lock">🔒</div>':''}
+    </div>`;
+  }).join('');
+}
+
+let _curRegion=null;
+function openRegion(rid){
+  _curRegion=REGIONS.find(r=>r.id===rid); if(!_curRegion) return;
+  document.getElementById('lsFlag').textContent=_curRegion.flag;
+  document.getElementById('lsName').textContent=_curRegion.name;
+  document.getElementById('lsDesc').textContent=_curRegion.desc;
+  renderLevels(); showScreen('levelSelect');
+}
+
+function renderLevels(){
+  const r=_curRegion;
+  document.getElementById('lvGrid').innerHTML=r.levels.map((lv,i)=>{
+    const key=`${r.id}_${lv.id}`, sc=scores[key]||0;
+    const prev=i>0?r.levels[i-1]:null;
+    const locked=i>0&&!(scores[`${r.id}_${prev.id}`]>=prev.target*.5);
+    const stars=sc>=lv.target?3:sc>=lv.target*.7?2:sc>0?1:0;
+    return `<div class="lv-card${locked?' locked':''} ${sc>=lv.target*.5?'done':''}"
+      onclick="${locked?`tip2('🔒 Hoàn thành màn ${i} trước!')`:`startGame(${r.id},${lv.id})`}">
+      <div class="lv-num">${lv.id}</div>
+      <div class="lv-tg">🎯${(lv.target/1000).toFixed(1)}K</div>
+      <div class="lv-st">${stars?'⭐'.repeat(stars)+'☆'.repeat(3-stars):'☆'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+// FLOAT TEXTS
+// ══════════════════════════════════════════════════════════════
+function floatW(txt,wx,wz,color='#FFD700'){
+  const v=new THREE.Vector3(wx,2.8,wz); v.project(camera);
+  const x=(v.x*.5+.5)*innerWidth, y=(-.5*v.y+.5)*innerHeight;
+  const d=document.createElement('div'); d.className='ftxt'; d.textContent=txt;
+  d.style.cssText=`color:${color};left:${x-16}px;top:${y-20}px`;
+  document.body.appendChild(d); setTimeout(()=>d.remove(),1100);
+}
+
+function floatStove(sid,text){
+  const sp=stationData.find(s=>s.type==='stove'&&s.id===sid)?.pos||{x:0,z:5.2};
+  floatW(text,sp.x,sp.z-1,'#FFD700');
+}
+
+// ══════════════════════════════════════════════════════════════
+// END GAME
+// ══════════════════════════════════════════════════════════════
 function endGame(){
   if(!G||!G.running) return;
-  G.running=false; closeModal(); clearInterval(gameTimer);
-  if(!scores[LV.id]||G.money>scores[LV.id]){scores[LV.id]=G.money;localStorage.setItem('nhph3',JSON.stringify(scores));}
+  G.running=false;
+  if(gameRAF){cancelAnimationFrame(gameRAF);gameRAF=null;}
+  const key=`${RG.id}_${LV.id}`;
+  if(!scores[key]||G.money>scores[key]) scores[key]=G.money;
+  const bk=`${RG.id}_best`;
+  if(!scores[bk]||G.money>scores[bk]) scores[bk]=G.money;
   const win=G.money>=LV.target;
-  const stars=G.money>=LV.target*1.5?3:win?2:G.money>=LV.target*.5?1:0;
-  const msgs=win?(stars===3?['🏆 Xuất Sắc!','🎊']:['🎉 Hoàn Thành!','✨']):['😅 Chưa đủ tiền!','💸'];
-  document.getElementById('resE').textContent=msgs[1];
-  document.getElementById('resT').textContent=msgs[0];
+  if(win){
+    scores[`${RG.id}_unlock`]=1;
+    // Unlock next level in region
+    if(LV.id>=10 && REGIONS.find(r=>r.id===RG.id+1)) scores[`${RG.id+1}_unlock`]=1; // allow next region if beat all 10
+  }
+  save();
+  const stars=G.money>=LV.target*1.4?3:win?2:G.money>=LV.target*.5?1:0;
+  const [msg,emoji]=win?(stars===3?['🏆 Xuất Sắc!','🎊']:['🎉 Hoàn Thành!','✨']):['😅 Chưa đủ tiền','💸'];
+  document.getElementById('resE').textContent=emoji;
+  document.getElementById('resT').textContent=msg;
   document.getElementById('resS').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
   document.getElementById('resM').textContent=G.money.toLocaleString()+'đ';
-  document.getElementById('resTg').textContent=`Mục tiêu: ${LV.target.toLocaleString()}đ`;
+  document.getElementById('resTg').textContent=`Mục tiêu: ${LV.target.toLocaleString()}đ · ${RG.flag} ${RG.name}`;
   document.getElementById('resSt').innerHTML=`
-    <div class="rs"><div class="rsv">🍽️${G.stats.served}</div><div class="rsl">Món phục vụ</div></div>
-    <div class="rs"><div class="rsv">💰${G.stats.tip}đ</div><div class="rsl">Tổng tip</div></div>
-    <div class="rs"><div class="rsv">💧${G.stats.washed}</div><div class="rsl">Dĩa đã rửa</div></div>
-    <div class="rs"><div class="rsv">😡${G.stats.angry}</div><div class="rsl">Khách bỏ đi</div></div>`;
-  const nxt=LEVELS.find(l=>l.id===LV.id+1);
-  const btnN=document.getElementById('btnNx');
-  if(nxt&&win){btnN.style.display='';btnN.textContent=`Màn ${nxt.id} →`;}else btnN.style.display='none';
+    <div class="rs"><div class="rsv">🪑${G.stats.seated}</div><div class="rsl">Đã nhận</div></div>
+    <div class="rs"><div class="rsv">🍽️${G.stats.served}</div><div class="rsl">Phục vụ</div></div>
+    <div class="rs"><div class="rsv">💰${G.stats.tip}đ</div><div class="rsl">Tiền tip</div></div>
+    <div class="rs"><div class="rsv">😤${G.stats.angry}</div><div class="rsl">Bỏ đi</div></div>`;
+  const nxtLv=_curRegion?.levels?.find(l=>l.id===LV.id+1);
+  const nxtRg=REGIONS.find(r=>r.id===RG.id+1);
+  const btn=document.getElementById('btnNx');
+  if(nxtLv&&win){ btn.style.display=''; _nxtFn=()=>startGame(RG.id,nxtLv.id); btn.textContent=`Màn ${nxtLv.id} →`; }
+  else if(!nxtLv&&win&&nxtRg){ btn.style.display=''; _nxtFn=()=>{ openRegion(nxtRg.id); }; btn.textContent=`${nxtRg.flag} →`; }
+  else btn.style.display='none';
   showScreen('result');
-  if(win){confetti();playS('win');haptic([50,30,50,30,100]);}else playS('wrong');
+  if(win){confetti();playS('win');haptic([48,28,48,28,95]);}else playS('wrong');
 }
 
-function nextLevel(){startGame(LV.id+1);}
-function goHome(){clearInterval(gameTimer);closeModal();if(G)G.running=false;showScreen('home');renderHome();}
-function confirmQuit(){if(confirm('Thoát? Tiến độ sẽ mất!')){clearInterval(gameTimer);closeModal();if(G)G.running=false;goHome();}}
+let _nxtFn=null;
+function btnNxClick(){ if(_nxtFn) _nxtFn(); }
 
-// ══════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-
-function floatAt(txt,tid,color){
-  const el=document.getElementById('tb'+tid); if(!el) return;
-  const r=el.getBoundingClientRect();
-  const d=document.createElement('div'); d.className='ftxt'; d.textContent=txt;
-  d.style.cssText=`color:${color};left:${r.left+r.width/2-20}px;top:${r.top}px`;
-  document.body.appendChild(d); setTimeout(()=>d.remove(),1200);
+function goHome(){
+  if(gameRAF){cancelAnimationFrame(gameRAF);gameRAF=null;}
+  if(G) G.running=false;
+  document.getElementById('ingOverlay').style.display='none';
+  showScreen('home'); renderHome();
 }
 
-let toastTO;
+function confirmQuit(){
+  if(confirm('Thoát màn? Tiến độ sẽ mất!')) goHome();
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════
+// EFFECTS
+// ══════════════════════════════════════════════════════════════
+let _toastT;
 function tip2(txt){
-  const el=document.getElementById('toast');
-  el.textContent=txt;el.classList.add('show');
-  clearTimeout(toastTO);toastTO=setTimeout(()=>el.classList.remove('show'),2500);
+  const el=document.getElementById('toast'); el.textContent=txt; el.classList.add('show');
+  clearTimeout(_toastT); _toastT=setTimeout(()=>el.classList.remove('show'),2500);
 }
-
-let tipEl=null,tipTO;
-function showTip(txt){clearTimeout(tipTO);if(!tipEl){tipEl=document.createElement('div');tipEl.className='tipbub';document.body.appendChild(tipEl);}tipEl.textContent=txt;tipTO=setTimeout(()=>{if(tipEl){tipEl.remove();tipEl=null;}},3500);}
 
 function confetti(){
-  ['🎉','✨','💰','⭐','🏆','🎊'].forEach(ch=>{
-    for(let i=0;i<4;i++)setTimeout(()=>{
-      const d=document.createElement('div');d.className='cf';d.textContent=ch;
-      const dur=2+Math.random()*2;
+  ['🎉','✨','💰','⭐','🏆','🎊','🥳'].forEach(ch=>{
+    for(let i=0;i<4;i++) setTimeout(()=>{
+      const d=document.createElement('div'); d.className='cf'; d.textContent=ch;
+      const dur=2+Math.random()*2.2;
       d.style.cssText=`left:${Math.random()*100}vw;font-size:${.9+Math.random()*.7}rem;animation-duration:${dur}s`;
-      document.body.appendChild(d);setTimeout(()=>d.remove(),dur*1000+100);
-    },i*55+Math.random()*180);
+      document.body.appendChild(d); setTimeout(()=>d.remove(),(dur+.1)*1000);
+    },i*60+Math.random()*200);
   });
 }
 
-// ══════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 // SOUND
-// ══════════════════════════════════════════
-let aC=null;
-function gC(){if(!aC){try{aC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return aC;}
-function playS(type){
-  const c=gC();if(!c)return;
+// ══════════════════════════════════════════════════════════════
+let _ac=null;
+function gC(){ if(!_ac){try{_ac=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return _ac; }
+function playS(t){
+  const c=gC(); if(!c) return;
   try{
-    const o=c.createOscillator(),g=c.createGain();
-    o.connect(g);g.connect(c.destination);
-    const t=c.currentTime;
-    if(type==='coin'){o.frequency.setValueAtTime(880,t);o.frequency.setValueAtTime(1100,t+.06);o.frequency.setValueAtTime(1320,t+.12);g.gain.setValueAtTime(.14,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.3);}
-    else if(type==='ding'){o.frequency.setValueAtTime(1200,t);g.gain.setValueAtTime(.11,t);g.gain.exponentialRampToValueAtTime(.001,t+.38);o.start(t);o.stop(t+.38);}
-    else if(type==='wrong'){o.type='sawtooth';o.frequency.setValueAtTime(220,t);o.frequency.setValueAtTime(155,t+.1);g.gain.setValueAtTime(.09,t);g.gain.exponentialRampToValueAtTime(.001,t+.22);o.start(t);o.stop(t+.22);}
-    else if(type==='click'){o.frequency.setValueAtTime(640,t);g.gain.setValueAtTime(.055,t);g.gain.exponentialRampToValueAtTime(.001,t+.065);o.start(t);o.stop(t+.065);}
-    else if(type==='win'){[523,659,784,1047].forEach((f,i)=>{const o2=c.createOscillator(),g2=c.createGain();o2.connect(g2);g2.connect(c.destination);o2.frequency.value=f;g2.gain.setValueAtTime(.12,t+i*.11);g2.gain.exponentialRampToValueAtTime(.001,t+i*.11+.28);o2.start(t+i*.11);o2.stop(t+i*.11+.28);});}
+    const o=c.createOscillator(),g=c.createGain(); o.connect(g); g.connect(c.destination);
+    const n=c.currentTime;
+    if(t==='coin'){o.frequency.setValueAtTime(880,n);o.frequency.setValueAtTime(1100,n+.06);o.frequency.setValueAtTime(1320,n+.12);g.gain.setValueAtTime(.13,n);g.gain.exponentialRampToValueAtTime(.001,n+.28);o.start(n);o.stop(n+.28);}
+    else if(t==='ding'){o.frequency.setValueAtTime(1200,n);g.gain.setValueAtTime(.09,n);g.gain.exponentialRampToValueAtTime(.001,n+.36);o.start(n);o.stop(n+.36);}
+    else if(t==='wrong'){o.type='sawtooth';o.frequency.setValueAtTime(220,n);o.frequency.setValueAtTime(155,n+.09);g.gain.setValueAtTime(.08,n);g.gain.exponentialRampToValueAtTime(.001,n+.22);o.start(n);o.stop(n+.22);}
+    else if(t==='click'){o.frequency.setValueAtTime(660,n);g.gain.setValueAtTime(.04,n);g.gain.exponentialRampToValueAtTime(.001,n+.07);o.start(n);o.stop(n+.07);}
+    else if(t==='win'){[523,659,784,1047].forEach((f,i)=>{const o2=c.createOscillator(),g2=c.createGain();o2.connect(g2);g2.connect(c.destination);o2.frequency.value=f;g2.gain.setValueAtTime(.1,n+i*.1);g2.gain.exponentialRampToValueAtTime(.001,n+i*.1+.28);o2.start(n+i*.1);o2.stop(n+i*.1+.28);});}
   }catch(e){}
 }
-function haptic(p){if(navigator.vibrate)navigator.vibrate(p);}
-document.addEventListener('touchstart',()=>gC(),{once:true});
+function haptic(p){ if(navigator.vibrate) navigator.vibrate(p); }
+document.addEventListener('touchstart',()=>gC(),{once:true,passive:true});
 document.addEventListener('click',()=>gC(),{once:true});
 
-// ══════════════════════════════════════════
 // BOOT
-// ══════════════════════════════════════════
 renderHome();
 </script>
 </body>
